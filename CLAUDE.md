@@ -71,8 +71,16 @@ Controller → Service → Repository → Database
 ## Code Conventions
 - English only — comments, class names, and methods
 - camelCase package names: `com.forvity.app`
+- camelCase method names — no underscores anywhere
 - DTOs for all communication via API (do not expose entities directly)
 - Exceptions handled with `@ControllerAdvice`
+
+## Test Conventions
+- Unit tests: `*Test.java` — run by Maven Surefire (`mvn test`)
+- Integration tests: `*IT.java` — run by Maven Failsafe (`mvn failsafe:integration-test`)
+- Test method naming: `shouldXxxWhenYyy()` in camelCase, no underscores
+- Unit tests use JUnit 5 + Mockito, no Spring context
+- Integration tests use `@SpringBootTest` against H2
 
 ## Domain Model
 
