@@ -12,19 +12,19 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
+    public MemberService(final MemberRepository memberRepository, final PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Member register(String email, String username, String password) {
+    public Member register(final String email, final String username, final String password) {
         hasText(email, "Email must not be blank");
         hasText(username, "Username must not be blank");
         hasText(password, "Password must not be blank");
         state(!memberRepository.existsByEmail(email), "Email already in use");
         state(!memberRepository.existsByUsername(username), "Username already in use");
 
-        Member member = new Member();
+        final var member = new Member();
         member.setEmail(email);
         member.setUsername(username);
         member.setPassword(passwordEncoder.encode(password));
