@@ -7,12 +7,19 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import static net.logstash.logback.argument.StructuredArguments.kv;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<Void> handleNotFound(final NoSuchElementException ex) {
+        log.warn("Resource not found", kv("message", ex.getMessage()));
+        return ResponseEntity.notFound().build();
+    }
 
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<Map<String, String>> handleIllegalState(final IllegalStateException ex) {

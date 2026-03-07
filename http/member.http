@@ -1,5 +1,5 @@
-### Register a new member
-POST http://localhost:8080/api/v1/members
+### Register member for a club
+POST http://localhost:8080/api/v1/clubs/fc-stockholm/members
 Content-Type: application/json
 
 {
@@ -8,32 +8,32 @@ Content-Type: application/json
   "password": "secret123"
 }
 
-### Register - missing email (should return 400)
-POST http://localhost:8080/api/v1/members
-Content-Type: application/json
-
-{
-  "email": "",
-  "username": "john",
-  "password": "secret123"
-}
-
-### Register - invalid email format (should return 400)
-POST http://localhost:8080/api/v1/members
-Content-Type: application/json
-
-{
-  "email": "not-an-email",
-  "username": "john",
-  "password": "secret123"
-}
-
-### Register - duplicate email (should return 400)
-POST http://localhost:8080/api/v1/members
+### Register member - duplicate email in same club
+POST http://localhost:8080/api/v1/clubs/fc-stockholm/members
 Content-Type: application/json
 
 {
   "email": "john@example.com",
   "username": "john2",
+  "password": "secret123"
+}
+
+### Register member - club does not exist
+POST http://localhost:8080/api/v1/clubs/unknown-club/members
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "username": "john",
+  "password": "secret123"
+}
+
+### Register member - invalid email
+POST http://localhost:8080/api/v1/clubs/fc-stockholm/members
+Content-Type: application/json
+
+{
+  "email": "not-an-email",
+  "username": "john",
   "password": "secret123"
 }

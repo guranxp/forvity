@@ -4,6 +4,8 @@ import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 import static net.logstash.logback.argument.StructuredArguments.kv;
 import static org.springframework.util.Assert.hasText;
 import static org.springframework.util.Assert.state;
@@ -33,5 +35,10 @@ public class ClubService {
         log.info("Club created", kv("clubId", saved.getId()), kv("slug", saved.getSlug()));
 
         return saved;
+    }
+
+    public Club getBySlug(final String slug) {
+        return clubRepository.findBySlug(slug)
+                .orElseThrow(() -> new NoSuchElementException("Club not found: " + slug));
     }
 }

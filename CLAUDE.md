@@ -159,6 +159,8 @@ Every entity extends `AuditableEntity` which provides:
 - A real person who is also a system admin has a separate system account with no club connection
 - There is no global identity — the same email address can be registered in multiple clubs independently
 - `Membership` and `MembershipRole` as separate entities are not needed — the `Member` entity IS the club membership
+- A member can hold multiple roles in their club via `@ElementCollection` on `Member` (stored in `member_roles` table)
+- Default role on registration is `MEMBER`
 - Soft deletes are used everywhere — hard deletes only during scheduled cleanup
 
 ## System Administration
