@@ -1,8 +1,9 @@
 package com.forvity.app.member;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,8 +24,12 @@ class MemberServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
-    @InjectMocks
     private MemberService memberService;
+
+    @BeforeEach
+    void setUp() {
+        memberService = new MemberService(memberRepository, passwordEncoder, new SimpleMeterRegistry());
+    }
 
     @Test
     void shouldSaveMemberWhenValidInput() {
@@ -33,7 +38,7 @@ class MemberServiceTest {
         when(passwordEncoder.encode("secret")).thenReturn("hashed");
         when(memberRepository.save(any(Member.class))).thenAnswer(i -> i.getArgument(0));
 
-        Member member = memberService.register("john@example.com", "john", "secret");
+        final var member = memberService.register("john@example.com", "john", "secret");
 
         assertThat(member.getEmail()).isEqualTo("john@example.com");
         assertThat(member.getUsername()).isEqualTo("john");

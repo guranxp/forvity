@@ -87,6 +87,12 @@ Controller → Service → Repository → Database
   - Controller layer: Bean Validation (`@NotBlank`, `@Email`, etc.) on record DTOs with `@Valid` — validates incoming HTTP requests
   - Service layer: Spring `Assert` for preconditions and business logic invariants
 
+## Metrics
+- Micrometer with Prometheus registry for metrics
+- Actuator endpoints exposed: `/actuator/health`, `/actuator/prometheus`
+- Define metrics (counters, timers) in the service constructor via `MeterRegistry`
+- Use `SimpleMeterRegistry` in unit tests — no mocking of `MeterRegistry`
+
 ## Logging
 - Use `@Slf4j` (Lombok) on all classes that log
 - Use `StructuredArguments.kv(...)` from logstash-logback-encoder for structured key-value logging
