@@ -72,6 +72,7 @@ Controller → Service → Repository → Database
 - English only — comments, class names, and methods
 - camelCase package names: `com.forvity.app`
 - camelCase method names — no underscores anywhere
+- Static imports preferred over qualified calls (e.g. `hasText(...)` not `Assert.hasText(...)`)
 - DTOs for all communication via API (do not expose entities directly)
 - Exceptions handled with `@ControllerAdvice`
 - **Lombok** on JPA entities — use `@Getter`/`@Setter` instead of manual boilerplate
