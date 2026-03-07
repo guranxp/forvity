@@ -5,9 +5,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
 import static net.logstash.logback.argument.StructuredArguments.kv;
+import static org.springframework.util.StringUtils.hasText;
 
 @Slf4j
 @Service
@@ -29,7 +28,7 @@ public class BootstrapService {
 
     @EventListener(ApplicationReadyEvent.class)
     public void bootstrap() {
-        if (!StringUtils.hasText(bootstrapEmail) || !StringUtils.hasText(bootstrapPassword)) {
+        if (!hasText(bootstrapEmail) || !hasText(bootstrapPassword)) {
             log.info("Bootstrap skipped — app.bootstrap.admin.email or app.bootstrap.admin.password not configured");
             return;
         }
