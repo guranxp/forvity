@@ -12,6 +12,7 @@ A web application where members of sports clubs can sign up for weekly activitie
 - PostgreSQL (production)
 - Maven
 - Docker
+- Micrometer + Prometheus (metrics)
 
 ## Getting Started
 
@@ -43,6 +44,18 @@ com.forvity.app
 
 REST API versioned under `/api/v1/...`
 
+HTTP test files for each endpoint are located in the `/http` directory (IntelliJ HTTP Client).
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/v1/members` | Register a new member |
+
+## Observability
+
+- Health: `GET /actuator/health`
+- Metrics (Prometheus): `GET /actuator/prometheus`
+
 ## Deployment
 
 Production runs as a Docker container against PostgreSQL, deployed to Render/Fly.io via GitHub Actions.
+CI runs unit tests first, then integration tests on every push and pull request to main.
