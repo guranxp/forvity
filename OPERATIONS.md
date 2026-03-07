@@ -82,6 +82,14 @@ Infrastructure maintainer (env vars, DB access, deployments)
 
 **Implication:** anyone with access to the deployment infrastructure (env vars, database, CI/CD pipeline) has effective control over all accounts. Restrict and audit infrastructure access accordingly.
 
+## Maintenance and Downtime
+
+Downtime is handled at the platform level — not in the application code.
+
+**Render / Fly.io:** both platforms have a built-in maintenance mode toggle that intercepts all traffic and serves a maintenance page. Use this for planned downtime (deployments, DB migrations, etc.).
+
+A custom maintenance page can be configured in the platform dashboard. No application changes are needed.
+
 ## Observability
 
 | Endpoint | Description |
