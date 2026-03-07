@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Set;
 
 import static net.logstash.logback.argument.StructuredArguments.kv;
@@ -43,5 +44,10 @@ public class MemberService {
         log.info("Member registered", kv("memberId", saved.getId()), kv("username", saved.getUsername()));
 
         return saved;
+    }
+
+    public Optional<MemberDetails> loadForAuthentication(final Club club, final String email) {
+        return memberRepository.findByEmailAndClub(email, club)
+                .map(MemberDetails::from);
     }
 }

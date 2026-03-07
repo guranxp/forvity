@@ -1,0 +1,35 @@
+### System admin login (ROOT / SUPERADMIN)
+POST http://localhost:8080/api/v1/login
+Content-Type: application/json
+
+{
+  "email": "root@example.com",
+  "password": "secret123"
+}
+
+### System admin login - wrong password
+POST http://localhost:8080/api/v1/login
+Content-Type: application/json
+
+{
+  "email": "root@example.com",
+  "password": "wrongpassword"
+}
+
+### Club member login
+POST http://localhost:8080/api/v1/clubs/fc-stockholm/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "secret123"
+}
+
+### Club member login - club does not exist
+POST http://localhost:8080/api/v1/clubs/unknown/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "secret123"
+}

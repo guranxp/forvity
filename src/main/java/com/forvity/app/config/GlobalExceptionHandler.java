@@ -6,6 +6,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
+
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -14,6 +17,12 @@ import static net.logstash.logback.argument.StructuredArguments.kv;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Map<String, String>> handleBadCredentials(final BadCredentialsException ex) {
+        log.warn("Authentication failed");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid credentials"));
+    }
 
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<Void> handleNotFound(final NoSuchElementException ex) {

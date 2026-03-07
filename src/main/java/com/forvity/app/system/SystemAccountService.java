@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 import static net.logstash.logback.argument.StructuredArguments.kv;
 import static org.springframework.util.Assert.hasText;
 import static org.springframework.util.Assert.state;
@@ -47,5 +49,13 @@ public class SystemAccountService {
         log.info("ROOT system account created", kv("systemAccountId", saved.getId()));
 
         return saved;
+    }
+
+    public Optional<SystemAccountDetails> loadForAuthentication(final String email) {
+        return systemAccountRepository.findByEmail(email)
+                .map(account -> {
+                    final var roles = systemRoleRepository.findAllBySystemAccountId(account.getId());
+                    return SystemAccountDetails.from(account, roles);
+                });
     }
 }

@@ -10,4 +10,6 @@ public interface MemberRepository extends JpaRepository<Member, UUID> {
     boolean existsByEmailAndClub(String email, Club club);
 
     boolean existsByUsernameAndClub(String username, Club club);
+
+    java.util.Optional<Member> findByEmailAndClub(String email, Club club);
 }
