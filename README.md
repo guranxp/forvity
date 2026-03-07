@@ -4,47 +4,25 @@ A web application where members of sports clubs can sign up for weekly activitie
 
 ## Tech Stack
 
-- Java 21
-- Spring Boot
-- Spring Security (form-based login with email/password)
-- Spring Data JPA
-- H2 (in-memory, local development)
-- PostgreSQL (production)
-- Maven
-- Docker
-- Micrometer + Prometheus (metrics)
+- Java 21, Spring Boot, Spring Security, Spring Data JPA
+- H2 (local), PostgreSQL (production)
+- Maven, Docker
+- Micrometer + Prometheus
 
-## Getting Started
-
-### Prerequisites
-
-- Java 21
-- Maven
-
-### Run locally
+## Quick Start
 
 ```bash
 mvn spring-boot:run
 ```
 
-The application starts with an H2 in-memory database. No additional setup required.
-
-## Project Structure
-
-Packaged by domain (DDD-inspired):
-
-```
-com.forvity.app
-├── member
-├── activity
-└── registration
-```
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and conventions.
+See [OPERATIONS.md](OPERATIONS.md) for deployment, configuration, and admin setup.
 
 ## API
 
 REST API versioned under `/api/v1/...`
 
-HTTP test files for each endpoint are located in the `/http` directory (IntelliJ HTTP Client).
+HTTP test files are in the `/http` directory (IntelliJ HTTP Client).
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -53,9 +31,4 @@ HTTP test files for each endpoint are located in the `/http` directory (IntelliJ
 ## Observability
 
 - Health: `GET /actuator/health`
-- Metrics (Prometheus): `GET /actuator/prometheus`
-
-## Deployment
-
-Production runs as a Docker container against PostgreSQL, deployed to Render/Fly.io via GitHub Actions.
-CI runs unit tests first, then integration tests on every push and pull request to main.
+- Metrics: `GET /actuator/prometheus`

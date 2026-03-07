@@ -155,6 +155,16 @@ Every entity extends `AuditableEntity` which provides:
 - A member can belong to multiple clubs, with different roles in each
 - Soft deletes are used everywhere — hard deletes only during scheduled cleanup
 
+## System Administration
+
+### SUPERADMIN Bootstrap
+- The first SUPERADMIN is created on startup via `@EventListener(ApplicationReadyEvent)`
+- Reads `app.bootstrap.admin.email` and `app.bootstrap.admin.password` from properties/env vars
+- Only runs if no SUPERADMIN exists in the DB — safe to keep configured permanently
+- Env var equivalents (Spring relaxed binding): `APP_BOOTSTRAP_ADMIN_EMAIL`, `APP_BOOTSTRAP_ADMIN_PASSWORD`
+- Additional SUPERADMINs are created via `POST /api/v1/system/roles` by an authenticated SUPERADMIN
+- Revoking a SUPERADMIN role is a soft delete on the `SystemRole` entity
+
 ## Deployment
 - Local: run directly with `mvn spring-boot:run` against H2
 - Production: Docker container against PostgreSQL
