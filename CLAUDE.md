@@ -76,6 +76,9 @@ Controller → Service → Repository → Database
 - Exceptions handled with `@ControllerAdvice`
 - **Lombok** on JPA entities — use `@Getter`/`@Setter` instead of manual boilerplate
 - **Java records** for DTOs — immutable, no Lombok needed
+- **Design by Contract**:
+  - Controller layer: Bean Validation (`@NotBlank`, `@Email`, etc.) on record DTOs with `@Valid` — validates incoming HTTP requests
+  - Service layer: Spring `Assert` for preconditions and business logic invariants
 
 ## Test Conventions
 - Unit tests: `*Test.java` — run by Maven Surefire (`mvn test`)

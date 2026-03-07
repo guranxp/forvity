@@ -45,7 +45,7 @@ class MemberServiceTest {
         when(memberRepository.existsByEmail("john@example.com")).thenReturn(true);
 
         assertThatThrownBy(() -> memberService.register("john@example.com", "john", "secret"))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalStateException.class)
                 .hasMessage("Email already in use");
 
         verify(memberRepository, never()).save(any());
@@ -57,7 +57,7 @@ class MemberServiceTest {
         when(memberRepository.existsByUsername("john")).thenReturn(true);
 
         assertThatThrownBy(() -> memberService.register("john@example.com", "john", "secret"))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalStateException.class)
                 .hasMessage("Username already in use");
 
         verify(memberRepository, never()).save(any());
