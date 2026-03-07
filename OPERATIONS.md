@@ -19,7 +19,19 @@
 
 On startup, the application checks if any SUPERADMIN exists. If not, it creates one using the bootstrap variables above. This runs only once — once a SUPERADMIN exists the values are ignored.
 
-Change the password via the API after first login.
+The bootstrap account is a **technical account** intended only for initial setup. Before deploying for the first time:
+
+1. Create a dedicated email address to use as the bootstrap account (e.g. `admin@yourdomain.com`)
+2. Set `APP_BOOTSTRAP_ADMIN_EMAIL` and `APP_BOOTSTRAP_ADMIN_PASSWORD` to those credentials before or during deployment
+3. On first startup the bootstrap account is created automatically
+
+After the system is running, create a real personal admin account:
+
+1. Log in as the bootstrap admin using the credentials you configured above
+2. Register a personal member account: `POST /api/v1/members`
+3. Promote it to SUPERADMIN: `POST /api/v1/system/roles`
+4. Log in with the personal account and verify access
+5. The bootstrap account can remain as a fallback — use a strong password and store it securely
 
 To add additional SUPERADMINs, an existing SUPERADMIN calls:
 
