@@ -1,17 +1,18 @@
 package com.forvity.app.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.BadCredentialsException;
-
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import static java.util.stream.Collectors.toMap;
 import static net.logstash.logback.argument.StructuredArguments.kv;
 
 @Slf4j
@@ -39,10 +40,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidation(final MethodArgumentNotValidException ex) {
         final var errors = ex.getBindingResult().getFieldErrors().stream()
-                .collect(java.util.stream.Collectors.toMap(
-                        org.springframework.validation.FieldError::getField,
-                        e -> e.getDefaultMessage() != null ? e.getDefaultMessage() : "invalid"
-                ));
+                .collect(toMap(FieldError::getField, e -> e.getDefaultMessage() != null ? e.getDefaultMessage() : "invalid"));
         log.warn("Validation failed", kv("errors", errors));
         return ResponseEntity.badRequest().body(errors);
     }

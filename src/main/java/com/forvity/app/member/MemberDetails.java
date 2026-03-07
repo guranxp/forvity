@@ -6,7 +6,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Set;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toSet;
 
 public class MemberDetails implements UserDetails {
 
@@ -23,7 +24,7 @@ public class MemberDetails implements UserDetails {
     public static MemberDetails from(final Member member) {
         final Set<GrantedAuthority> authorities = member.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
-                .collect(Collectors.toSet());
+                .collect(toSet());
         return new MemberDetails(member.getEmail(), member.getPassword(), authorities);
     }
 

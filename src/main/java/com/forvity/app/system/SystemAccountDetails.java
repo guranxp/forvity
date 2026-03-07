@@ -7,7 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toSet;
 
 public record SystemAccountDetails(
         String email,
@@ -18,7 +19,7 @@ public record SystemAccountDetails(
     public static SystemAccountDetails from(final SystemAccount account, final List<SystemRole> roles) {
         final var authorities = roles.stream()
                 .flatMap(role -> authoritiesFor(role.getRole()).stream())
-                .collect(Collectors.toSet());
+                .collect(toSet());
         return new SystemAccountDetails(account.getEmail(), account.getPassword(), authorities);
     }
 
