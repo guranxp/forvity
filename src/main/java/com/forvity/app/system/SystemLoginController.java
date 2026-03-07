@@ -27,25 +27,28 @@ public class SystemLoginController {
     private final PasswordEncoder passwordEncoder;
     private final SecurityContextRepository securityContextRepository;
 
-    public SystemLoginController(final SystemAccountService systemAccountService,
-                                 final PasswordEncoder passwordEncoder,
-                                 final SecurityContextRepository securityContextRepository) {
+    public SystemLoginController(
+            final SystemAccountService systemAccountService,
+            final PasswordEncoder passwordEncoder,
+            final SecurityContextRepository securityContextRepository) {
         this.systemAccountService = systemAccountService;
         this.passwordEncoder = passwordEncoder;
         this.securityContextRepository = securityContextRepository;
     }
 
     @PostMapping
-    public ResponseEntity<Void> login(@RequestBody @Valid final SystemLoginRequest request,
-                                      final HttpServletRequest httpRequest,
-                                      final HttpServletResponse httpResponse) {
+    public ResponseEntity<Void> login(
+            @RequestBody @Valid final SystemLoginRequest request,
+            final HttpServletRequest httpRequest,
+            final HttpServletResponse httpResponse) {
         log.info("POST /api/v1/login", kv("email", request.email()));
 
         final var userDetails = systemAccountService.loadForAuthentication(request.email())
                 .filter(details -> passwordEncoder.matches(request.password(), details.getPassword()))
                 .orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
 
-        final var auth = UsernamePasswordAuthenticationToken.authenticated(userDetails, null, userDetails.getAuthorities());
+        final var auth = UsernamePasswordAuthenticationToken.authenticated(
+                userDetails, null, userDetails.getAuthorities());
         final SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(auth);
         SecurityContextHolder.setContext(context);

@@ -5,5 +5,6 @@ import jakarta.validation.constraints.Pattern;
 
 public record CreateClubRequest(
         @NotBlank String name,
-        @NotBlank @Pattern(regexp = "^[a-z0-9-]+$", message = "Slug must be lowercase letters, numbers, and hyphens only") String slug
+        @NotBlank @Pattern(regexp = "^[a-z0-9-]+$", message = "Slug must be lowercase letters, numbers, and hyphens only")
+        String slug
 ) {}

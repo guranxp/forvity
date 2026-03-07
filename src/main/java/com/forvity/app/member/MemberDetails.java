@@ -15,7 +15,10 @@ public class MemberDetails implements UserDetails {
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    private MemberDetails(final String email, final String password, final Collection<? extends GrantedAuthority> authorities) {
+    private MemberDetails(
+            final String email,
+            final String password,
+            final Collection<? extends GrantedAuthority> authorities) {
         this.email = email;
         this.password = password;
         this.authorities = authorities;

@@ -26,10 +26,11 @@ public class ClubLoginController {
     private final PasswordEncoder passwordEncoder;
     private final SecurityContextRepository securityContextRepository;
 
-    public ClubLoginController(final MemberService memberService,
-                               final ClubService clubService,
-                               final PasswordEncoder passwordEncoder,
-                               final SecurityContextRepository securityContextRepository) {
+    public ClubLoginController(
+            final MemberService memberService,
+            final ClubService clubService,
+            final PasswordEncoder passwordEncoder,
+            final SecurityContextRepository securityContextRepository) {
         this.memberService = memberService;
         this.clubService = clubService;
         this.passwordEncoder = passwordEncoder;
@@ -37,10 +38,11 @@ public class ClubLoginController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> login(@PathVariable final String slug,
-                                      @RequestBody @Valid final ClubLoginRequest request,
-                                      final HttpServletRequest httpRequest,
-                                      final HttpServletResponse httpResponse) {
+    public ResponseEntity<Void> login(
+            @PathVariable final String slug,
+            @RequestBody @Valid final ClubLoginRequest request,
+            final HttpServletRequest httpRequest,
+            final HttpServletResponse httpResponse) {
         log.info("POST /api/v1/clubs/{}/login", slug, kv("email", request.email()));
 
         final var club = clubService.getBySlug(slug);
@@ -49,7 +51,9 @@ public class ClubLoginController {
                 .filter(details -> passwordEncoder.matches(request.password(), details.getPassword()))
                 .orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
 
-        final var auth = UsernamePasswordAuthenticationToken.authenticated(userDetails, null, userDetails.getAuthorities());
+        final var auth = UsernamePasswordAuthenticationToken.authenticated(
+                userDetails, null, userDetails.getAuthorities()
+        );
         final SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(auth);
         SecurityContextHolder.setContext(context);

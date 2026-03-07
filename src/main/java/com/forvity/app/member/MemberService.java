@@ -22,7 +22,10 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final MeterRegistry meterRegistry;
 
-    public MemberService(final MemberRepository memberRepository, final PasswordEncoder passwordEncoder, final MeterRegistry meterRegistry) {
+    public MemberService(
+            final MemberRepository memberRepository,
+            final PasswordEncoder passwordEncoder,
+            final MeterRegistry meterRegistry) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
         this.meterRegistry = meterRegistry;
@@ -37,7 +40,13 @@ public class MemberService {
         state(!memberRepository.existsByEmailAndClub(email, club), "Email already in use");
         state(!memberRepository.existsByUsernameAndClub(username, club), "Username already in use");
 
-        final var member = new Member(club, email, username, passwordEncoder.encode(password), Set.of(MemberRoleType.MEMBER));
+        final var member = new Member(
+                club,
+                email,
+                username,
+                passwordEncoder.encode(password),
+                Set.of(MemberRoleType.MEMBER)
+        );
         final var saved = memberRepository.save(member);
 
         meterRegistry.counter("members.registered").increment();

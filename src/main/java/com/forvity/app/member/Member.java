@@ -41,7 +41,12 @@ public class Member extends AuditableEntity {
     @Column(name = "role", nullable = false)
     private Set<MemberRoleType> roles;
 
-    public Member(final Club club, final String email, final String username, final String password, final Set<MemberRoleType> roles) {
+    public Member(
+            final Club club,
+            final String email,
+            final String username,
+            final String password,
+            final Set<MemberRoleType> roles) {
         this.club = club;
         this.email = email;
         this.username = username;

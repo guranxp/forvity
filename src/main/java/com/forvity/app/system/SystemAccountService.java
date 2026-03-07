@@ -20,10 +20,11 @@ public class SystemAccountService {
     private final PasswordEncoder passwordEncoder;
     private final MeterRegistry meterRegistry;
 
-    SystemAccountService(final SystemAccountRepository systemAccountRepository,
-                                final SystemRoleRepository systemRoleRepository,
-                                final PasswordEncoder passwordEncoder,
-                                final MeterRegistry meterRegistry) {
+    SystemAccountService(
+            final SystemAccountRepository systemAccountRepository,
+            final SystemRoleRepository systemRoleRepository,
+            final PasswordEncoder passwordEncoder,
+            final MeterRegistry meterRegistry) {
         this.systemAccountRepository = systemAccountRepository;
         this.systemRoleRepository = systemRoleRepository;
         this.passwordEncoder = passwordEncoder;
