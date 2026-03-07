@@ -1,5 +1,6 @@
 package com.forvity.app.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,9 +20,14 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/v1/login", "/api/v1/clubs/*/login").permitAll()
-                .requestMatchers("/api/v1/clubs", "/api/v1/clubs/*/members").permitAll()
+                .requestMatchers("/api/v1/clubs/*/members").permitAll()
+                .requestMatchers("/api/v1/clubs").hasRole("SUPERADMIN")
                 .requestMatchers("/actuator/health", "/actuator/prometheus").permitAll()
                 .anyRequest().authenticated()
+            )
+            .exceptionHandling(ex -> ex
+                .authenticationEntryPoint((request, response, authException) ->
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED))
             );
         return http.build();
     }

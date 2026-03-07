@@ -79,6 +79,19 @@ class ClubControllerIT {
     }
 
     @Test
+    void shouldReturnUnauthorizedWhenNotAuthenticated() throws Exception {
+        mockMvc.perform(post("/api/v1/clubs")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "name": "FC Stockholm",
+                                  "slug": "fc-stockholm"
+                                }
+                                """))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     @WithMockUser(roles = "SUPERADMIN")
     void shouldReturnBadRequestWhenFieldsAreMissing() throws Exception {
         mockMvc.perform(post("/api/v1/clubs")
