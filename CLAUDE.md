@@ -118,31 +118,28 @@ Controller → Service → Repository → Database
 
 ### Entities
 
-**`Member`** — system-level identity and credentials:
+**`Member`** — an account scoped to exactly one club:
+- `id` (UUID)
+- `clubId` (the club this account belongs to)
+- `email` (unique per club)
+- `username` (unique per club)
+- `password` (hashed)
+- `role` (enum: `CLUB_ADMIN`, `TEAM_ADMIN`, `MEMBER`)
+
+**`SystemAccount`** — a system-level account with no club connection (ROOT, SUPERADMIN):
 - `id` (UUID)
 - `email` (unique system-wide)
 - `username` (unique system-wide)
 - `password` (hashed)
 
-**`SystemRole`** — system-wide roles, separate from club roles:
+**`SystemRole`** — system-wide role attached to a SystemAccount:
 - `id` (UUID)
-- `memberId`
+- `systemAccountId`
 - `role` (enum: `ROOT`, `SUPERADMIN`)
 
 **`Club`** — a sports club:
 - `id` (UUID)
 - `name`
-
-**`Membership`** — links a member to a club:
-- `id` (UUID)
-- `memberId`
-- `clubId`
-
-**`MembershipRole`** — a role a member holds within a club:
-- `id` (UUID)
-- `membershipId`
-- `role` (enum: CLUB_ADMIN, TEAM_ADMIN, MEMBER)
-- A member can hold multiple roles within the same club
 
 ### Audit Fields (all tables)
 Every entity extends `AuditableEntity` which provides:
@@ -151,8 +148,10 @@ Every entity extends `AuditableEntity` which provides:
 - `deletedAt` (LocalDateTime) — soft delete tombstone, null means active
 
 ### Notes
-- `SUPERADMIN` is system-level only, never connected to a club
-- A member can belong to multiple clubs, with different roles in each
+- Accounts are fully isolated per club — a real person registers separately for each club they join
+- A real person who is also a system admin has a separate system account with no club connection
+- There is no global identity — the same email address can be registered in multiple clubs independently
+- `Membership` and `MembershipRole` as separate entities are not needed — the `Member` entity IS the club membership
 - Soft deletes are used everywhere — hard deletes only during scheduled cleanup
 
 ## System Administration
