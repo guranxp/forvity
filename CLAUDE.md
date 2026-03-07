@@ -87,6 +87,12 @@ Controller → Service → Repository → Database
   - Controller layer: Bean Validation (`@NotBlank`, `@Email`, etc.) on record DTOs with `@Valid` — validates incoming HTTP requests
   - Service layer: Spring `Assert` for preconditions and business logic invariants
 
+## Logging
+- Use `@Slf4j` (Lombok) on all classes that log
+- Use `StructuredArguments.kv(...)` from logstash-logback-encoder for structured key-value logging
+- Static import `kv`: `import static net.logstash.logback.argument.StructuredArguments.kv`
+- Plain text format locally, JSON (LogstashEncoder) in production (`prod` Spring profile)
+
 ## Test Conventions
 - Unit tests: `*Test.java` — run by Maven Surefire (`mvn test`)
 - Integration tests: `*IT.java` — run by Maven Failsafe (`mvn failsafe:integration-test`)
