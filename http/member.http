@@ -1,0 +1,39 @@
+### Register a new member
+POST http://localhost:8080/api/v1/members
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "username": "john",
+  "password": "secret123"
+}
+
+### Register - missing email (should return 400)
+POST http://localhost:8080/api/v1/members
+Content-Type: application/json
+
+{
+  "email": "",
+  "username": "john",
+  "password": "secret123"
+}
+
+### Register - invalid email format (should return 400)
+POST http://localhost:8080/api/v1/members
+Content-Type: application/json
+
+{
+  "email": "not-an-email",
+  "username": "john",
+  "password": "secret123"
+}
+
+### Register - duplicate email (should return 400)
+POST http://localhost:8080/api/v1/members
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "username": "john2",
+  "password": "secret123"
+}
