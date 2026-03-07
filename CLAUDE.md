@@ -75,6 +75,9 @@ Controller → Service → Repository → Database
 - Static imports preferred over qualified calls (e.g. `hasText(...)` not `Assert.hasText(...)`
 - Prefer immutability — make classes and fields immutable where possible
 - Always declare local variables and method parameters as `final`
+- Avoid setters — create instances via constructors with parameters (default) or builder when there are many parameters
+- JPA entities use `@NoArgsConstructor(access = PROTECTED)` for JPA + a package-friendly constructor for normal use
+- Use `@Getter` only on entities — no `@Setter`
 - DTOs for all communication via API (do not expose entities directly)
 - Exceptions handled with `@ControllerAdvice`
 - **Lombok** on JPA entities — use `@Getter`/`@Setter` instead of manual boilerplate

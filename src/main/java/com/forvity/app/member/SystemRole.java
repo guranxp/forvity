@@ -3,12 +3,12 @@ package com.forvity.app.member;
 import com.forvity.app.shared.AuditableEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
 @Getter
-@Setter
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @Entity
 @Table(name = "system_roles")
 public class SystemRole extends AuditableEntity {
@@ -24,4 +24,9 @@ public class SystemRole extends AuditableEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private SystemRoleType role;
+
+    public SystemRole(final Member member, final SystemRoleType role) {
+        this.member = member;
+        this.role = role;
+    }
 }

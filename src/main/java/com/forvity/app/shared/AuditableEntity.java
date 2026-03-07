@@ -5,7 +5,6 @@ import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -19,7 +18,6 @@ public abstract class AuditableEntity {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @Setter
     private LocalDateTime deletedAt;
 
     @PrePersist
@@ -31,6 +29,10 @@ public abstract class AuditableEntity {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    public void softDelete() {
+        deletedAt = LocalDateTime.now();
     }
 
     public boolean isDeleted() {

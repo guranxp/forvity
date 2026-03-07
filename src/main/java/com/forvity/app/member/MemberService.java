@@ -24,10 +24,7 @@ public class MemberService {
         state(!memberRepository.existsByEmail(email), "Email already in use");
         state(!memberRepository.existsByUsername(username), "Username already in use");
 
-        final var member = new Member();
-        member.setEmail(email);
-        member.setUsername(username);
-        member.setPassword(passwordEncoder.encode(password));
+        final var member = new Member(email, username, passwordEncoder.encode(password));
 
         return memberRepository.save(member);
     }
