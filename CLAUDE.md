@@ -52,6 +52,12 @@ Controller → Service → Repository → Database
 - Versioning: `/api/v1/...`
 - HTTP test files (IntelliJ HTTP Client) are created for each endpoint
 
+### Authentication
+- System admins (ROOT, SUPERADMIN) log in via: `POST /api/v1/login`
+- Club members log in via: `POST /api/v1/clubs/{slug}/login`
+- Club slug identifies which club's account to authenticate against (e.g. `fc-stockholm`)
+- Spring Security form-based login with email + password
+
 ## Test Strategy
 - **Unit tests**: Service layer with JUnit 5 + Mockito — focus on business logic
 - **Integration tests**: Key flows with `@SpringBootTest` against H2
@@ -140,6 +146,7 @@ Controller → Service → Repository → Database
 **`Club`** — a sports club:
 - `id` (UUID)
 - `name`
+- `slug` (unique, URL-friendly identifier, e.g. `fc-stockholm`)
 
 ### Audit Fields (all tables)
 Every entity extends `AuditableEntity` which provides:
