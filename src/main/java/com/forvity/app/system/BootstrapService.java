@@ -22,7 +22,7 @@ public class BootstrapService {
     @Value("${app.bootstrap.admin.password:}")
     private String bootstrapPassword;
 
-    public BootstrapService(final SystemAccountService systemAccountService, final SystemRoleRepository systemRoleRepository) {
+    BootstrapService(final SystemAccountService systemAccountService, final SystemRoleRepository systemRoleRepository) {
         this.systemAccountService = systemAccountService;
         this.systemRoleRepository = systemRoleRepository;
     }

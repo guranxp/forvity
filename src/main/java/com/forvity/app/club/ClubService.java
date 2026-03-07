@@ -17,7 +17,7 @@ public class ClubService {
     private final ClubRepository clubRepository;
     private final MeterRegistry meterRegistry;
 
-    public ClubService(final ClubRepository clubRepository, final MeterRegistry meterRegistry) {
+    ClubService(final ClubRepository clubRepository, final MeterRegistry meterRegistry) {
         this.clubRepository = clubRepository;
         this.meterRegistry = meterRegistry;
     }

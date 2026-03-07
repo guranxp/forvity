@@ -20,7 +20,7 @@ public class SystemAccountService {
     private final PasswordEncoder passwordEncoder;
     private final MeterRegistry meterRegistry;
 
-    public SystemAccountService(final SystemAccountRepository systemAccountRepository,
+    SystemAccountService(final SystemAccountRepository systemAccountRepository,
                                 final SystemRoleRepository systemRoleRepository,
                                 final PasswordEncoder passwordEncoder,
                                 final MeterRegistry meterRegistry) {
