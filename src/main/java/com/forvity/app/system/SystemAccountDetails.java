@@ -9,17 +9,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class SystemAccountDetails implements UserDetails {
-
-    private final String email;
-    private final String password;
-    private final Collection<? extends GrantedAuthority> authorities;
-
-    private SystemAccountDetails(final String email, final String password, final Collection<? extends GrantedAuthority> authorities) {
-        this.email = email;
-        this.password = password;
-        this.authorities = authorities;
-    }
+public record SystemAccountDetails(
+        String email,
+        String password,
+        Collection<? extends GrantedAuthority> authorities
+) implements UserDetails {
 
     public static SystemAccountDetails from(final SystemAccount account, final List<SystemRole> roles) {
         final var authorities = roles.stream()
