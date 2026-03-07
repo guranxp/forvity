@@ -76,6 +76,9 @@ Controller → Service → Repository → Database
 - Prefer immutability — make classes and fields immutable where possible
 - Always declare local variables and method parameters as `final`
 - Follow the Tell Don't Ask principle — tell objects to do things rather than asking for state and acting externally
+- Use `Optional` instead of null returns
+- Use streams for collection processing
+- Never return or pass `null`
 - Avoid setters — create instances via constructors with parameters (default) or builder when there are many parameters
 - JPA entities use `@NoArgsConstructor(access = PROTECTED)` for JPA + a package-friendly constructor for normal use
 - Use `@Getter` only on entities — no `@Setter`
