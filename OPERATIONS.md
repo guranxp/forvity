@@ -63,6 +63,25 @@ docker run -p 8080:8080 \
 
 CI/CD deploys automatically to Render/Fly.io on push to main via GitHub Actions.
 
+## Trust Model and Access Hierarchy
+
+The effective trust hierarchy is:
+
+```
+Infrastructure maintainer (env vars, DB access, deployments)
+  └── ROOT (bootstrap account — created from env vars)
+        └── SUPERADMIN (promoted via API by ROOT or another SUPERADMIN)
+              └── CLUB_ADMIN (assigned per club by SUPERADMIN or ROOT)
+                    └── MEMBER
+```
+
+**Role rules:**
+- `ROOT` — created by bootstrap only, cannot be promoted to via API, cannot be revoked by anyone
+- `SUPERADMIN` — promoted by ROOT or any SUPERADMIN; can be revoked unless it's the last one or self
+- Infrastructure maintainers (those with env var and DB access) sit above all application-level roles — this is intentional and unavoidable
+
+**Implication:** anyone with access to the deployment infrastructure (env vars, database, CI/CD pipeline) has effective control over all accounts. Restrict and audit infrastructure access accordingly.
+
 ## Observability
 
 | Endpoint | Description |

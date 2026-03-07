@@ -127,7 +127,7 @@ Controller → Service → Repository → Database
 **`SystemRole`** — system-wide roles, separate from club roles:
 - `id` (UUID)
 - `memberId`
-- `role` (enum: SUPERADMIN)
+- `role` (enum: `ROOT`, `SUPERADMIN`)
 
 **`Club`** — a sports club:
 - `id` (UUID)
@@ -157,13 +157,19 @@ Every entity extends `AuditableEntity` which provides:
 
 ## System Administration
 
+### System Role Hierarchy
+- `ROOT` — bootstrap only, cannot be promoted to via API, cannot be revoked by anyone
+- `SUPERADMIN` — promoted by ROOT or any SUPERADMIN; can be revoked unless it's the last one or self-revocation
+- Spring Security treats ROOT as having all SUPERADMIN authorities
+- `SystemRoleType` enum: `ROOT`, `SUPERADMIN`
+
 ### SUPERADMIN Bootstrap
-- The first SUPERADMIN is created on startup via `@EventListener(ApplicationReadyEvent)`
+- The ROOT account is created on startup via `@EventListener(ApplicationReadyEvent)`
 - Reads `app.bootstrap.admin.email` and `app.bootstrap.admin.password` from properties/env vars
-- Only runs if no SUPERADMIN exists in the DB — safe to keep configured permanently
+- Only runs if no ROOT exists in the DB — safe to keep configured permanently
 - Env var equivalents (Spring relaxed binding): `APP_BOOTSTRAP_ADMIN_EMAIL`, `APP_BOOTSTRAP_ADMIN_PASSWORD`
-- Additional SUPERADMINs are created via `POST /api/v1/system/roles` by an authenticated SUPERADMIN
-- Revoking a SUPERADMIN role is a soft delete on the `SystemRole` entity
+- Additional SUPERADMINs are created via `POST /api/v1/system/roles` by ROOT or an authenticated SUPERADMIN
+- Revoking a system role is a soft delete on the `SystemRole` entity
 
 ## Deployment
 - Local: run directly with `mvn spring-boot:run` against H2
