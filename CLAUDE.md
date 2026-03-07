@@ -74,6 +74,52 @@ Controller → Service → Repository → Database
 - DTOs for all communication via API (do not expose entities directly)
 - Exceptions handled with `@ControllerAdvice`
 
+## Domain Model
+
+### Multi-tenancy
+- The system is multi-club — clubs are fully isolated from each other
+- Deleting a club cascades and removes all its data (memberships, teams, activities, registrations)
+- No data is ever shared between clubs
+
+### Entities
+
+**`Member`** — system-level identity and credentials:
+- `id` (UUID)
+- `email` (unique system-wide)
+- `username` (unique system-wide)
+- `password` (hashed)
+
+**`SystemRole`** — system-wide roles, separate from club roles:
+- `id` (UUID)
+- `memberId`
+- `role` (enum: SUPERADMIN)
+
+**`Club`** — a sports club:
+- `id` (UUID)
+- `name`
+
+**`Membership`** — links a member to a club:
+- `id` (UUID)
+- `memberId`
+- `clubId`
+
+**`MembershipRole`** — a role a member holds within a club:
+- `id` (UUID)
+- `membershipId`
+- `role` (enum: CLUB_ADMIN, TEAM_ADMIN, MEMBER)
+- A member can hold multiple roles within the same club
+
+### Audit Fields (all tables)
+Every entity extends `AuditableEntity` which provides:
+- `createdAt` (LocalDateTime)
+- `updatedAt` (LocalDateTime)
+- `deletedAt` (LocalDateTime) — soft delete tombstone, null means active
+
+### Notes
+- `SUPERADMIN` is system-level only, never connected to a club
+- A member can belong to multiple clubs, with different roles in each
+- Soft deletes are used everywhere — hard deletes only during scheduled cleanup
+
 ## Deployment
 - Local: run directly with `mvn spring-boot:run` against H2
 - Production: Docker container against PostgreSQL
