@@ -1,0 +1,26 @@
+### Create club
+POST http://localhost:8080/api/v1/clubs
+Content-Type: application/json
+
+{
+  "name": "FC Stockholm",
+  "slug": "fc-stockholm"
+}
+
+### Create club - duplicate slug
+POST http://localhost:8080/api/v1/clubs
+Content-Type: application/json
+
+{
+  "name": "FC Stockholm 2",
+  "slug": "fc-stockholm"
+}
+
+### Create club - invalid slug format
+POST http://localhost:8080/api/v1/clubs
+Content-Type: application/json
+
+{
+  "name": "FC Stockholm",
+  "slug": "FC Stockholm!"
+}
