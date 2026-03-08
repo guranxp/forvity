@@ -50,8 +50,8 @@ class SystemAccountServiceTest {
         when(systemAccountRepository.existsByEmail("admin@example.com")).thenReturn(true);
 
         assertThatThrownBy(() -> systemAccountService.createRootAccount("admin@example.com", "secret"))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Email already in use");
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("Email already in use");
 
         verify(systemAccountRepository, never()).save(any());
     }

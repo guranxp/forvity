@@ -43,8 +43,8 @@ class ClubServiceTest {
         when(clubRepository.existsBySlug("fc-stockholm")).thenReturn(true);
 
         assertThatThrownBy(() -> clubService.create("FC Stockholm", "fc-stockholm"))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Slug already in use");
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("Slug already in use");
 
         verify(clubRepository, never()).save(any());
     }

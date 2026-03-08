@@ -51,7 +51,7 @@ class ClubLoginControllerIT {
                                   "password": "secret123"
                                 }
                                 """))
-                .andExpect(status().isOk());
+            .andExpect(status().isOk());
     }
 
     @Test
@@ -64,7 +64,7 @@ class ClubLoginControllerIT {
                                   "password": "wrongpassword"
                                 }
                                 """))
-                .andExpect(status().isUnauthorized());
+            .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -77,6 +77,6 @@ class ClubLoginControllerIT {
                                   "password": "secret123"
                                 }
                                 """))
-                .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound());
     }
 }

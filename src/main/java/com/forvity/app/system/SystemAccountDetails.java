@@ -21,8 +21,8 @@ public record SystemAccountDetails(
         notNull(account, "account must not be null");
         notNull(roles, "roles must not be null");
         final var authorities = roles.stream()
-                .flatMap(role -> authoritiesFor(role.getRole()).stream())
-                .collect(toSet());
+            .flatMap(role -> authoritiesFor(role.getRole()).stream())
+            .collect(toSet());
         return new SystemAccountDetails(account.getEmail(), account.getPassword(), authorities);
     }
 

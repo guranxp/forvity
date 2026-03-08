@@ -28,8 +28,8 @@ public class MemberDetails implements UserDetails {
     public static MemberDetails from(final Member member) {
         notNull(member, "member must not be null");
         final Set<GrantedAuthority> authorities = member.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
-                .collect(toSet());
+            .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
+            .collect(toSet());
         return new MemberDetails(member.getEmail(), member.getPassword(), authorities);
     }
 

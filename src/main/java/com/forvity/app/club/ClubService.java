@@ -43,6 +43,6 @@ public class ClubService {
     public Club getBySlug(final String slug) {
         hasText(slug, "Slug must not be blank");
         return clubRepository.findBySlug(slug)
-                .orElseThrow(() -> new NoSuchElementException("Club not found: " + slug));
+            .orElseThrow(() -> new NoSuchElementException("Club not found: " + slug));
     }
 }

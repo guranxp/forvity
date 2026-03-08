@@ -32,10 +32,10 @@ class ClubControllerIT {
                                   "slug": "fc-stockholm"
                                 }
                                 """))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").isNotEmpty())
-                .andExpect(jsonPath("$.name").value("FC Stockholm"))
-                .andExpect(jsonPath("$.slug").value("fc-stockholm"));
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.id").isNotEmpty())
+            .andExpect(jsonPath("$.name").value("FC Stockholm"))
+            .andExpect(jsonPath("$.slug").value("fc-stockholm"));
     }
 
     @Test
@@ -49,7 +49,7 @@ class ClubControllerIT {
                                   "slug": "fc-stockholm"
                                 }
                                 """))
-                .andExpect(status().isCreated());
+            .andExpect(status().isCreated());
 
         mockMvc.perform(post("/api/v1/clubs")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -59,8 +59,8 @@ class ClubControllerIT {
                                   "slug": "fc-stockholm"
                                 }
                                 """))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").value("Slug already in use"));
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.error").value("Slug already in use"));
     }
 
     @Test
@@ -74,8 +74,8 @@ class ClubControllerIT {
                                   "slug": "FC Stockholm!"
                                 }
                                 """))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.slug").isNotEmpty());
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.slug").isNotEmpty());
     }
 
     @Test
@@ -88,7 +88,7 @@ class ClubControllerIT {
                                   "slug": "fc-stockholm"
                                 }
                                 """))
-                .andExpect(status().isUnauthorized());
+            .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -97,6 +97,6 @@ class ClubControllerIT {
         mockMvc.perform(post("/api/v1/clubs")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}"))
-                .andExpect(status().isBadRequest());
+            .andExpect(status().isBadRequest());
     }
 }

@@ -47,11 +47,11 @@ class MemberControllerIT {
                                   "password": "secret123"
                                 }
                                 """))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").isNotEmpty())
-                .andExpect(jsonPath("$.email").value("john@example.com"))
-                .andExpect(jsonPath("$.username").value("john"))
-                .andExpect(jsonPath("$.roles[0]").value("MEMBER"));
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.id").isNotEmpty())
+            .andExpect(jsonPath("$.email").value("john@example.com"))
+            .andExpect(jsonPath("$.username").value("john"))
+            .andExpect(jsonPath("$.roles[0]").value("MEMBER"));
     }
 
     @Test
@@ -65,7 +65,7 @@ class MemberControllerIT {
                                   "password": "secret123"
                                 }
                                 """))
-                .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound());
     }
 
     @Test
@@ -79,7 +79,7 @@ class MemberControllerIT {
                                   "password": "secret123"
                                 }
                                 """))
-                .andExpect(status().isCreated());
+            .andExpect(status().isCreated());
 
         mockMvc.perform(post("/api/v1/clubs/fc-stockholm/members")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -90,8 +90,8 @@ class MemberControllerIT {
                                   "password": "secret123"
                                 }
                                 """))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").value("Email already in use"));
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.error").value("Email already in use"));
     }
 
     @Test
@@ -105,7 +105,7 @@ class MemberControllerIT {
                                   "password": "secret123"
                                 }
                                 """))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.email").isNotEmpty());
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.email").isNotEmpty());
     }
 }

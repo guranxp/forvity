@@ -53,8 +53,8 @@ class MemberServiceTest {
         when(memberRepository.existsByEmailAndClub("john@example.com", club)).thenReturn(true);
 
         assertThatThrownBy(() -> memberService.register(club, "john@example.com", "john", "secret"))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Email already in use");
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("Email already in use");
 
         verify(memberRepository, never()).save(any());
     }
@@ -65,8 +65,8 @@ class MemberServiceTest {
         when(memberRepository.existsByUsernameAndClub("john", club)).thenReturn(true);
 
         assertThatThrownBy(() -> memberService.register(club, "john@example.com", "john", "secret"))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("Username already in use");
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("Username already in use");
 
         verify(memberRepository, never()).save(any());
     }

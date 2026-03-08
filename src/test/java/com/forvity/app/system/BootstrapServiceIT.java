@@ -31,7 +31,7 @@ class BootstrapServiceIT {
     @Test
     void shouldNotCreateDuplicateRootOnSecondStartup() {
         assertThat(systemRoleRepository.findAll().stream()
-                .filter(r -> r.getRole() == SystemRoleType.ROOT)
-                .count()).isEqualTo(1);
+            .filter(r -> r.getRole() == SystemRoleType.ROOT)
+            .count()).isEqualTo(1);
     }
 }

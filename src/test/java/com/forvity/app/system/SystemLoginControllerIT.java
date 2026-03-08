@@ -34,7 +34,7 @@ class SystemLoginControllerIT {
                                   "password": "secret123"
                                 }
                                 """))
-                .andExpect(status().isOk());
+            .andExpect(status().isOk());
     }
 
     @Test
@@ -47,7 +47,7 @@ class SystemLoginControllerIT {
                                   "password": "wrongpassword"
                                 }
                                 """))
-                .andExpect(status().isUnauthorized());
+            .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -60,6 +60,6 @@ class SystemLoginControllerIT {
                                   "password": "secret123"
                                 }
                                 """))
-                .andExpect(status().isUnauthorized());
+            .andExpect(status().isUnauthorized());
     }
 }

@@ -62,6 +62,6 @@ public class MemberService {
         notNull(club, "Club must not be null");
         hasText(email, "Email must not be blank");
         return memberRepository.findByEmailAndClub(email, club)
-                .map(MemberDetails::from);
+            .map(MemberDetails::from);
     }
 }

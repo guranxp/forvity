@@ -57,9 +57,9 @@ public class SystemAccountService {
     public Optional<SystemAccountDetails> loadForAuthentication(final String email) {
         hasText(email, "Email must not be blank");
         return systemAccountRepository.findByEmail(email)
-                .map(account -> {
-                    final var roles = systemRoleRepository.findAllBySystemAccountId(account.getId());
-                    return SystemAccountDetails.from(account, roles);
-                });
+            .map(account -> {
+                final var roles = systemRoleRepository.findAllBySystemAccountId(account.getId());
+                return SystemAccountDetails.from(account, roles);
+            });
     }
 }

@@ -48,8 +48,8 @@ public class SystemLoginController {
         log.info("POST /api/v1/login", kv("email", request.email()));
 
         final var userDetails = systemAccountService.loadForAuthentication(request.email())
-                .filter(details -> passwordEncoder.matches(request.password(), details.getPassword()))
-                .orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
+            .filter(details -> passwordEncoder.matches(request.password(), details.getPassword()))
+            .orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
 
         final var auth = UsernamePasswordAuthenticationToken.authenticated(
                 userDetails, null, userDetails.getAuthorities());

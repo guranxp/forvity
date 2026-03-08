@@ -35,7 +35,7 @@ public class MemberController {
         final var member = memberService.register(club, request.email(), request.username(), request.password());
         final var response = MemberResponse.from(member);
         return ResponseEntity
-                .created(URI.create("/api/v1/clubs/" + slug + "/members/" + response.id()))
-                .body(response);
+            .created(URI.create("/api/v1/clubs/" + slug + "/members/" + response.id()))
+            .body(response);
     }
 }
