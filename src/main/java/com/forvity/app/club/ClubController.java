@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 
 import static net.logstash.logback.argument.StructuredArguments.kv;
+import static org.springframework.util.Assert.notNull;
 
 @Slf4j
 @RestController
@@ -20,6 +21,7 @@ public class ClubController {
     private final ClubService clubService;
 
     public ClubController(final ClubService clubService) {
+        notNull(clubService, "clubService must not be null");
         this.clubService = clubService;
     }
 

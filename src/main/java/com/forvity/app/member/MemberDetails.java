@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
+import static org.springframework.util.Assert.notNull;
 
 public class MemberDetails implements UserDetails {
 
@@ -25,6 +26,7 @@ public class MemberDetails implements UserDetails {
     }
 
     public static MemberDetails from(final Member member) {
+        notNull(member, "member must not be null");
         final Set<GrantedAuthority> authorities = member.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
                 .collect(toSet());

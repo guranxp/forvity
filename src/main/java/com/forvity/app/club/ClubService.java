@@ -8,6 +8,7 @@ import java.util.NoSuchElementException;
 
 import static net.logstash.logback.argument.StructuredArguments.kv;
 import static org.springframework.util.Assert.hasText;
+import static org.springframework.util.Assert.notNull;
 import static org.springframework.util.Assert.state;
 
 @Slf4j
@@ -18,6 +19,8 @@ public class ClubService {
     private final MeterRegistry meterRegistry;
 
     ClubService(final ClubRepository clubRepository, final MeterRegistry meterRegistry) {
+        notNull(clubRepository, "clubRepository must not be null");
+        notNull(meterRegistry, "meterRegistry must not be null");
         this.clubRepository = clubRepository;
         this.meterRegistry = meterRegistry;
     }
@@ -38,6 +41,7 @@ public class ClubService {
     }
 
     public Club getBySlug(final String slug) {
+        hasText(slug, "Slug must not be blank");
         return clubRepository.findBySlug(slug)
                 .orElseThrow(() -> new NoSuchElementException("Club not found: " + slug));
     }

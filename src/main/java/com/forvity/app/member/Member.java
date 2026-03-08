@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 import java.util.Set;
 import java.util.UUID;
 
+import static org.springframework.util.Assert.hasText;
+import static org.springframework.util.Assert.notNull;
+
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @Entity
@@ -47,6 +50,11 @@ public class Member extends AuditableEntity {
             final String username,
             final String password,
             final Set<MemberRoleType> roles) {
+        notNull(club, "Club must not be null");
+        hasText(email, "Email must not be blank");
+        hasText(username, "Username must not be blank");
+        hasText(password, "Password must not be blank");
+        notNull(roles, "Roles must not be null");
         this.club = club;
         this.email = email;
         this.username = username;

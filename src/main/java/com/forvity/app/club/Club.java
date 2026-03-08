@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
+import static org.springframework.util.Assert.hasText;
+
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @Entity
@@ -24,6 +26,8 @@ public class Club extends AuditableEntity {
     private String slug;
 
     public Club(final String name, final String slug) {
+        hasText(name, "Name must not be blank");
+        hasText(slug, "Slug must not be blank");
         this.name = name;
         this.slug = slug;
     }

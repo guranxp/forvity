@@ -26,6 +26,9 @@ public class MemberService {
             final MemberRepository memberRepository,
             final PasswordEncoder passwordEncoder,
             final MeterRegistry meterRegistry) {
+        notNull(memberRepository, "memberRepository must not be null");
+        notNull(passwordEncoder, "passwordEncoder must not be null");
+        notNull(meterRegistry, "meterRegistry must not be null");
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
         this.meterRegistry = meterRegistry;
@@ -56,6 +59,8 @@ public class MemberService {
     }
 
     public Optional<MemberDetails> loadForAuthentication(final Club club, final String email) {
+        notNull(club, "Club must not be null");
+        hasText(email, "Email must not be blank");
         return memberRepository.findByEmailAndClub(email, club)
                 .map(MemberDetails::from);
     }

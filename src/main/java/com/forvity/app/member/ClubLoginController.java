@@ -15,6 +15,7 @@ import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 
 import static net.logstash.logback.argument.StructuredArguments.kv;
+import static org.springframework.util.Assert.notNull;
 
 @Slf4j
 @RestController
@@ -31,6 +32,10 @@ public class ClubLoginController {
             final ClubService clubService,
             final PasswordEncoder passwordEncoder,
             final SecurityContextRepository securityContextRepository) {
+        notNull(memberService, "memberService must not be null");
+        notNull(clubService, "clubService must not be null");
+        notNull(passwordEncoder, "passwordEncoder must not be null");
+        notNull(securityContextRepository, "securityContextRepository must not be null");
         this.memberService = memberService;
         this.clubService = clubService;
         this.passwordEncoder = passwordEncoder;

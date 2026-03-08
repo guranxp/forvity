@@ -6,6 +6,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import static net.logstash.logback.argument.StructuredArguments.kv;
+import static org.springframework.util.Assert.notNull;
 import static org.springframework.util.StringUtils.hasText;
 
 @Slf4j
@@ -22,6 +23,8 @@ public class BootstrapService {
     private String bootstrapPassword;
 
     BootstrapService(final SystemAccountService systemAccountService, final SystemRoleRepository systemRoleRepository) {
+        notNull(systemAccountService, "systemAccountService must not be null");
+        notNull(systemRoleRepository, "systemRoleRepository must not be null");
         this.systemAccountService = systemAccountService;
         this.systemRoleRepository = systemRoleRepository;
     }

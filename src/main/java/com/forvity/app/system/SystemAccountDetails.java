@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
+import static org.springframework.util.Assert.notNull;
 
 public record SystemAccountDetails(
         String email,
@@ -17,6 +18,8 @@ public record SystemAccountDetails(
 ) implements UserDetails {
 
     public static SystemAccountDetails from(final SystemAccount account, final List<SystemRole> roles) {
+        notNull(account, "account must not be null");
+        notNull(roles, "roles must not be null");
         final var authorities = roles.stream()
                 .flatMap(role -> authoritiesFor(role.getRole()).stream())
                 .collect(toSet());

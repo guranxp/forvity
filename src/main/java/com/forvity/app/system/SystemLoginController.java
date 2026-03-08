@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import static net.logstash.logback.argument.StructuredArguments.kv;
+import static org.springframework.util.Assert.notNull;
 
 @Slf4j
 @RestController
@@ -31,6 +32,9 @@ public class SystemLoginController {
             final SystemAccountService systemAccountService,
             final PasswordEncoder passwordEncoder,
             final SecurityContextRepository securityContextRepository) {
+        notNull(systemAccountService, "systemAccountService must not be null");
+        notNull(passwordEncoder, "passwordEncoder must not be null");
+        notNull(securityContextRepository, "securityContextRepository must not be null");
         this.systemAccountService = systemAccountService;
         this.passwordEncoder = passwordEncoder;
         this.securityContextRepository = securityContextRepository;

@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
+import static org.springframework.util.Assert.hasText;
+
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @Entity
@@ -24,6 +26,8 @@ public class SystemAccount extends AuditableEntity {
     private String password;
 
     public SystemAccount(final String email, final String password) {
+        hasText(email, "Email must not be blank");
+        hasText(password, "Password must not be blank");
         this.email = email;
         this.password = password;
     }

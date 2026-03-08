@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 
 import static net.logstash.logback.argument.StructuredArguments.kv;
+import static org.springframework.util.Assert.notNull;
 
 @Slf4j
 @RestController
@@ -19,6 +20,8 @@ public class MemberController {
     private final ClubService clubService;
 
     public MemberController(final MemberService memberService, final ClubService clubService) {
+        notNull(memberService, "memberService must not be null");
+        notNull(clubService, "clubService must not be null");
         this.memberService = memberService;
         this.clubService = clubService;
     }

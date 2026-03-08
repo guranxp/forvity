@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
+import static org.springframework.util.Assert.notNull;
+
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @Entity
@@ -26,6 +28,8 @@ public class SystemRole extends AuditableEntity {
     private SystemRoleType role;
 
     public SystemRole(final SystemAccount systemAccount, final SystemRoleType role) {
+        notNull(systemAccount, "systemAccount must not be null");
+        notNull(role, "role must not be null");
         this.systemAccount = systemAccount;
         this.role = role;
     }

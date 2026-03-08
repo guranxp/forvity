@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import static net.logstash.logback.argument.StructuredArguments.kv;
 import static org.springframework.util.Assert.hasText;
+import static org.springframework.util.Assert.notNull;
 import static org.springframework.util.Assert.state;
 
 @Slf4j
@@ -25,6 +26,10 @@ public class SystemAccountService {
             final SystemRoleRepository systemRoleRepository,
             final PasswordEncoder passwordEncoder,
             final MeterRegistry meterRegistry) {
+        notNull(systemAccountRepository, "systemAccountRepository must not be null");
+        notNull(systemRoleRepository, "systemRoleRepository must not be null");
+        notNull(passwordEncoder, "passwordEncoder must not be null");
+        notNull(meterRegistry, "meterRegistry must not be null");
         this.systemAccountRepository = systemAccountRepository;
         this.systemRoleRepository = systemRoleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -50,6 +55,7 @@ public class SystemAccountService {
     }
 
     public Optional<SystemAccountDetails> loadForAuthentication(final String email) {
+        hasText(email, "Email must not be blank");
         return systemAccountRepository.findByEmail(email)
                 .map(account -> {
                     final var roles = systemRoleRepository.findAllBySystemAccountId(account.getId());
