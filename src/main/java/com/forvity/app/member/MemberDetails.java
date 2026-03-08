@@ -6,20 +6,24 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.UUID;
 
 import static java.util.stream.Collectors.toSet;
 import static org.springframework.util.Assert.notNull;
 
 public class MemberDetails implements UserDetails {
 
+    private final UUID clubId;
     private final String email;
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
 
     private MemberDetails(
+            final UUID clubId,
             final String email,
             final String password,
             final Collection<? extends GrantedAuthority> authorities) {
+        this.clubId = clubId;
         this.email = email;
         this.password = password;
         this.authorities = authorities;
@@ -30,7 +34,11 @@ public class MemberDetails implements UserDetails {
         final Set<GrantedAuthority> authorities = member.getRoles().stream()
             .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
             .collect(toSet());
-        return new MemberDetails(member.getEmail(), member.getPassword(), authorities);
+        return new MemberDetails(member.getClub().getId(), member.getEmail(), member.getPassword(), authorities);
+    }
+
+    public UUID getClubId() {
+        return clubId;
     }
 
     @Override
