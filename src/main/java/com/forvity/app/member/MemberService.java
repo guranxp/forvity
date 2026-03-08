@@ -35,7 +35,7 @@ public class MemberService {
     }
 
     public Member register(final Club club, final String email, final String username, final String password) {
-        log.info("Registering member", kv("clubId", club.getId()), kv("email", email), kv("username", username));
+        log.info("Registering member {} {} {}", kv("clubId", club.getId()), kv("email", email), kv("username", username));
         notNull(club, "Club must not be null");
         hasText(email, "Email must not be blank");
         hasText(username, "Username must not be blank");
@@ -53,7 +53,7 @@ public class MemberService {
         final var saved = memberRepository.save(member);
 
         meterRegistry.counter("members.registered").increment();
-        log.info("Member registered", kv("memberId", saved.getId()), kv("username", saved.getUsername()));
+        log.info("Member registered {} {}", kv("memberId", saved.getId()), kv("username", saved.getUsername()));
 
         return saved;
     }

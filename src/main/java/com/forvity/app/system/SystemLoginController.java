@@ -58,7 +58,7 @@ public class SystemLoginController {
         SecurityContextHolder.setContext(context);
         securityContextRepository.saveContext(context, httpRequest, httpResponse);
 
-        log.info("System login successful", kv("email", request.email()));
+        log.info("System login successful {}", kv("email", request.email()));
         return ResponseEntity.ok().build();
     }
 }

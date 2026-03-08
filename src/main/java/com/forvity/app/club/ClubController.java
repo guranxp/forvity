@@ -27,7 +27,7 @@ public class ClubController {
 
     @PostMapping
     public ResponseEntity<ClubResponse> create(@RequestBody @Valid final CreateClubRequest request) {
-        log.info("POST /api/v1/clubs", kv("name", request.name()), kv("slug", request.slug()));
+        log.info("POST /api/v1/clubs {} {}", kv("name", request.name()), kv("slug", request.slug()));
         final var club = clubService.create(request.name(), request.slug());
         final var response = ClubResponse.from(club);
         return ResponseEntity.created(URI.create("/api/v1/clubs/" + response.slug())).body(response);

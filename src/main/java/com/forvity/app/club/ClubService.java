@@ -26,7 +26,7 @@ public class ClubService {
     }
 
     public Club create(final String name, final String slug) {
-        log.info("Creating club", kv("name", name), kv("slug", slug));
+        log.info("Creating club {} {}", kv("name", name), kv("slug", slug));
         hasText(name, "Name must not be blank");
         hasText(slug, "Slug must not be blank");
         state(!clubRepository.existsBySlug(slug), "Slug already in use");
@@ -35,7 +35,7 @@ public class ClubService {
         final var saved = clubRepository.save(club);
 
         meterRegistry.counter("clubs.created").increment();
-        log.info("Club created", kv("clubId", saved.getId()), kv("slug", saved.getSlug()));
+        log.info("Club created {} {}", kv("clubId", saved.getId()), kv("slug", saved.getSlug()));
 
         return saved;
     }

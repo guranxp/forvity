@@ -48,7 +48,7 @@ public class ClubLoginController {
             @RequestBody @Valid final ClubLoginRequest request,
             final HttpServletRequest httpRequest,
             final HttpServletResponse httpResponse) {
-        log.info("POST /api/v1/clubs/{}/login", slug, kv("email", request.email()));
+        log.info("POST /api/v1/clubs/{}/login {}", slug, kv("email", request.email()));
 
         final var club = clubService.getBySlug(slug);
 
@@ -64,7 +64,7 @@ public class ClubLoginController {
         SecurityContextHolder.setContext(context);
         securityContextRepository.saveContext(context, httpRequest, httpResponse);
 
-        log.info("Club login successful", kv("slug", slug), kv("email", request.email()));
+        log.info("Club login successful {} {}", kv("slug", slug), kv("email", request.email()));
         return ResponseEntity.ok().build();
     }
 }

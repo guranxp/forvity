@@ -41,8 +41,8 @@ public class BootstrapService {
             return;
         }
 
-        log.info("No ROOT account found — bootstrapping", kv("email", bootstrapEmail));
+        log.info("No ROOT account found — bootstrapping {}", kv("email", bootstrapEmail));
         systemAccountService.createRootAccount(bootstrapEmail, bootstrapPassword);
-        log.info("Bootstrap complete", kv("email", bootstrapEmail));
+        log.info("Bootstrap complete {}", kv("email", bootstrapEmail));
     }
 }

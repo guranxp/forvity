@@ -27,13 +27,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<Void> handleNotFound(final NoSuchElementException ex) {
-        log.warn("Resource not found", kv("message", ex.getMessage()));
+        log.warn("Resource not found {}", kv("message", ex.getMessage()));
         return ResponseEntity.notFound().build();
     }
 
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<Map<String, String>> handleIllegalState(final IllegalStateException ex) {
-        log.warn("Business rule violation", kv("message", ex.getMessage()));
+        log.warn("Business rule violation {}", kv("message", ex.getMessage()));
         return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
     }
 
@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
         final var errors = ex.getBindingResult().getFieldErrors().stream()
                 .collect(toMap(FieldError::getField,
                         e -> e.getDefaultMessage() != null ? e.getDefaultMessage() : "invalid"));
-        log.warn("Validation failed", kv("errors", errors));
+        log.warn("Validation failed {}", kv("errors", errors));
         return ResponseEntity.badRequest().body(errors);
     }
 }
