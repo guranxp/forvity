@@ -45,7 +45,7 @@ public class SystemLoginController {
             @RequestBody @Valid final SystemLoginRequest request,
             final HttpServletRequest httpRequest,
             final HttpServletResponse httpResponse) {
-        log.info("POST /api/v1/login", kv("email", request.email()));
+        log.info("POST /api/v1/login {}", kv("email", request.email()));
 
         final var userDetails = systemAccountService.loadForAuthentication(request.email())
             .filter(details -> passwordEncoder.matches(request.password(), details.getPassword()))
