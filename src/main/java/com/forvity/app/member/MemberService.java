@@ -1,6 +1,5 @@
 package com.forvity.app.member;
 
-import com.forvity.app.club.Club;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -8,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 import static net.logstash.logback.argument.StructuredArguments.kv;
 import static org.springframework.util.Assert.hasText;
@@ -34,17 +34,17 @@ public class MemberService {
         this.meterRegistry = meterRegistry;
     }
 
-    public Member register(final Club club, final String email, final String username, final String password) {
-        log.info("Registering member {} {} {}", kv("clubId", club.getId()), kv("email", email), kv("username", username));
-        notNull(club, "Club must not be null");
+    public Member register(final UUID clubId, final String email, final String username, final String password) {
+        log.info("Registering member {} {} {}", kv("clubId", clubId), kv("email", email), kv("username", username));
+        notNull(clubId, "Club ID must not be null");
         hasText(email, "Email must not be blank");
         hasText(username, "Username must not be blank");
         hasText(password, "Password must not be blank");
-        state(!memberRepository.existsByEmailAndClub(email, club), "Email already in use");
-        state(!memberRepository.existsByUsernameAndClub(username, club), "Username already in use");
+        state(!memberRepository.existsByEmailAndClubId(email, clubId), "Email already in use");
+        state(!memberRepository.existsByUsernameAndClubId(username, clubId), "Username already in use");
 
         final var member = new Member(
-                club,
+                clubId,
                 email,
                 username,
                 passwordEncoder.encode(password),
@@ -58,10 +58,10 @@ public class MemberService {
         return saved;
     }
 
-    public Optional<MemberDetails> loadForAuthentication(final Club club, final String email) {
-        notNull(club, "Club must not be null");
+    public Optional<MemberDetails> loadForAuthentication(final UUID clubId, final String email) {
+        notNull(clubId, "Club ID must not be null");
         hasText(email, "Email must not be blank");
-        return memberRepository.findByEmailAndClub(email, club)
+        return memberRepository.findByEmailAndClubId(email, clubId)
             .map(MemberDetails::from);
     }
 }

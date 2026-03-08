@@ -1,15 +1,15 @@
 package com.forvity.app.member;
 
-import com.forvity.app.club.Club;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface MemberRepository extends JpaRepository<Member, UUID> {
 
-    boolean existsByEmailAndClub(String email, Club club);
+    boolean existsByEmailAndClubId(String email, UUID clubId);
 
-    boolean existsByUsernameAndClub(String username, Club club);
+    boolean existsByUsernameAndClubId(String username, UUID clubId);
 
-    java.util.Optional<Member> findByEmailAndClub(String email, Club club);
+    Optional<Member> findByEmailAndClubId(String email, UUID clubId);
 }

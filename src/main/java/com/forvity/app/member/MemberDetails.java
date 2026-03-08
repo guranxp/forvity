@@ -34,7 +34,7 @@ public class MemberDetails implements UserDetails {
         final Set<GrantedAuthority> authorities = member.getRoles().stream()
             .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
             .collect(toSet());
-        return new MemberDetails(member.getClub().getId(), member.getEmail(), member.getPassword(), authorities);
+        return new MemberDetails(member.getClubId(), member.getEmail(), member.getPassword(), authorities);
     }
 
     public UUID getClubId() {

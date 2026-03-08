@@ -1,6 +1,5 @@
 package com.forvity.app.member;
 
-import com.forvity.app.club.Club;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,6 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -23,8 +24,7 @@ class MemberServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
-    @Mock
-    private Club club;
+    private final UUID clubId = UUID.randomUUID();
 
     private MemberService memberService;
 
@@ -35,12 +35,12 @@ class MemberServiceTest {
 
     @Test
     void shouldSaveMemberWhenValidInput() {
-        when(memberRepository.existsByEmailAndClub("john@example.com", club)).thenReturn(false);
-        when(memberRepository.existsByUsernameAndClub("john", club)).thenReturn(false);
+        when(memberRepository.existsByEmailAndClubId("john@example.com", clubId)).thenReturn(false);
+        when(memberRepository.existsByUsernameAndClubId("john", clubId)).thenReturn(false);
         when(passwordEncoder.encode("secret")).thenReturn("hashed");
         when(memberRepository.save(any(Member.class))).thenAnswer(i -> i.getArgument(0));
 
-        final var member = memberService.register(club, "john@example.com", "john", "secret");
+        final var member = memberService.register(clubId, "john@example.com", "john", "secret");
 
         assertThat(member.getEmail()).isEqualTo("john@example.com");
         assertThat(member.getUsername()).isEqualTo("john");
@@ -50,9 +50,9 @@ class MemberServiceTest {
 
     @Test
     void shouldThrowWhenEmailAlreadyInUse() {
-        when(memberRepository.existsByEmailAndClub("john@example.com", club)).thenReturn(true);
+        when(memberRepository.existsByEmailAndClubId("john@example.com", clubId)).thenReturn(true);
 
-        assertThatThrownBy(() -> memberService.register(club, "john@example.com", "john", "secret"))
+        assertThatThrownBy(() -> memberService.register(clubId, "john@example.com", "john", "secret"))
             .isInstanceOf(IllegalStateException.class)
             .hasMessage("Email already in use");
 
@@ -61,10 +61,10 @@ class MemberServiceTest {
 
     @Test
     void shouldThrowWhenUsernameAlreadyInUse() {
-        when(memberRepository.existsByEmailAndClub("john@example.com", club)).thenReturn(false);
-        when(memberRepository.existsByUsernameAndClub("john", club)).thenReturn(true);
+        when(memberRepository.existsByEmailAndClubId("john@example.com", clubId)).thenReturn(false);
+        when(memberRepository.existsByUsernameAndClubId("john", clubId)).thenReturn(true);
 
-        assertThatThrownBy(() -> memberService.register(club, "john@example.com", "john", "secret"))
+        assertThatThrownBy(() -> memberService.register(clubId, "john@example.com", "john", "secret"))
             .isInstanceOf(IllegalStateException.class)
             .hasMessage("Username already in use");
 

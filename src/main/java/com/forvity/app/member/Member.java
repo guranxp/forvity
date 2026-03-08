@@ -1,6 +1,5 @@
 package com.forvity.app.member;
 
-import com.forvity.app.club.Club;
 import com.forvity.app.shared.AuditableEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -25,9 +24,8 @@ public class Member extends AuditableEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "club_id", nullable = false)
-    private Club club;
+    @Column(name = "club_id", nullable = false)
+    private UUID clubId;
 
     @Column(nullable = false)
     private String email;
@@ -45,17 +43,17 @@ public class Member extends AuditableEntity {
     private Set<MemberRoleType> roles;
 
     public Member(
-            final Club club,
+            final UUID clubId,
             final String email,
             final String username,
             final String password,
             final Set<MemberRoleType> roles) {
-        notNull(club, "Club must not be null");
+        notNull(clubId, "Club ID must not be null");
         hasText(email, "Email must not be blank");
         hasText(username, "Username must not be blank");
         hasText(password, "Password must not be blank");
         notNull(roles, "Roles must not be null");
-        this.club = club;
+        this.clubId = clubId;
         this.email = email;
         this.username = username;
         this.password = password;
