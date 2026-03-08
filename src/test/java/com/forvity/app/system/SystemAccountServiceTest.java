@@ -35,14 +35,12 @@ class SystemAccountServiceTest {
     @Test
     void shouldCreateRootAccountWhenValidInput() {
         when(systemAccountRepository.existsByEmail("admin@example.com")).thenReturn(false);
-        when(systemAccountRepository.existsByUsername("admin")).thenReturn(false);
         when(passwordEncoder.encode("secret")).thenReturn("hashed");
         when(systemAccountRepository.save(any(SystemAccount.class))).thenAnswer(i -> i.getArgument(0));
 
         final var account = systemAccountService.createRootAccount("admin@example.com", "secret");
 
         assertThat(account.getEmail()).isEqualTo("admin@example.com");
-        assertThat(account.getUsername()).isEqualTo("admin");
         assertThat(account.getPassword()).isEqualTo("hashed");
         verify(systemRoleRepository).save(any(SystemRole.class));
     }

@@ -9,7 +9,5 @@ interface SystemAccountRepository extends JpaRepository<SystemAccount, UUID> {
 
     boolean existsByEmail(String email);
 
-    boolean existsByUsername(String username);
-
     Optional<SystemAccount> findByEmail(String email);
 }

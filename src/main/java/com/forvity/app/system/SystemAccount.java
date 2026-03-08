@@ -20,15 +20,11 @@ public class SystemAccount extends AuditableEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, unique = true)
-    private String username;
-
     @Column(nullable = false)
     private String password;
 
-    public SystemAccount(final String email, final String username, final String password) {
+    public SystemAccount(final String email, final String password) {
         this.email = email;
-        this.username = username;
         this.password = password;
     }
 }

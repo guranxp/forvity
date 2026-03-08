@@ -37,10 +37,7 @@ public class SystemAccountService {
         hasText(password, "Password must not be blank");
         state(!systemAccountRepository.existsByEmail(email), "Email already in use");
 
-        final var username = email.substring(0, email.indexOf('@'));
-        state(!systemAccountRepository.existsByUsername(username), "Username already in use");
-
-        final var account = new SystemAccount(email, username, passwordEncoder.encode(password));
+        final var account = new SystemAccount(email, passwordEncoder.encode(password));
         final var saved = systemAccountRepository.save(account);
 
         final var role = new SystemRole(saved, SystemRoleType.ROOT);
