@@ -28,16 +28,15 @@ The bootstrap account is a **technical account** intended only for initial setup
 After the system is running, create a real personal admin account:
 
 1. Log in as the bootstrap admin using the credentials you configured above
-2. Register a personal member account: `POST /api/v1/members`
-3. Promote it to SUPERADMIN: `POST /api/v1/system/roles`
-4. Log in with the personal account and verify access
-5. The bootstrap account can remain as a fallback — use a strong password and store it securely
+2. Create a personal system account and promote it to SUPERADMIN: `POST /api/v1/system/roles`
+3. Log in with the personal account and verify access
+4. The bootstrap account can remain as a fallback — use a strong password and store it securely
 
 To add additional SUPERADMINs, an existing SUPERADMIN calls:
 
 ```
 POST /api/v1/system/roles
-{ "memberId": "...", "role": "SUPERADMIN" }
+{ "email": "...", "password": "...", "role": "SUPERADMIN" }
 ```
 
 To revoke a SUPERADMIN role, call:
