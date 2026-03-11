@@ -15,4 +15,6 @@ interface SystemRoleRepository extends JpaRepository<SystemRole, UUID> {
     long countByRoleAndDeletedAtIsNull(SystemRoleType role);
 
     Optional<SystemRole> findByIdAndDeletedAtIsNull(UUID id);
+
+    List<SystemRole> findAllByDeletedAtIsNull();
 }

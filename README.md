@@ -26,7 +26,13 @@ HTTP test files are in the `/http` directory (IntelliJ HTTP Client).
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/api/v1/members` | Register a new member |
+| POST | `/api/v1/login` | System admin login |
+| GET | `/api/v1/system/roles` | List system admins |
+| POST | `/api/v1/system/roles` | Create SUPERADMIN |
+| DELETE | `/api/v1/system/roles/{id}` | Revoke SUPERADMIN |
+| POST | `/api/v1/clubs` | Create club |
+| POST | `/api/v1/clubs/{slug}/login` | Club member login |
+| POST | `/api/v1/clubs/{slug}/members` | Register club member |
 
 ## Observability
 

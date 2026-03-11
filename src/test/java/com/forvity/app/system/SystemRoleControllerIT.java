@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -32,6 +33,24 @@ class SystemRoleControllerIT {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Test
+    void shouldListSystemRolesWhenAuthenticatedAsRoot() throws Exception {
+        final var session = loginAsRoot();
+        createSuperAdmin(session, "super@example.com");
+
+        mockMvc.perform(get("/api/v1/system/roles").session(session))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].role").isNotEmpty())
+                .andExpect(jsonPath("$[0].email").isNotEmpty());
+    }
+
+    @Test
+    void shouldReturnUnauthorizedOnListWhenNotAuthenticated() throws Exception {
+        mockMvc.perform(get("/api/v1/system/roles"))
+                .andExpect(status().isUnauthorized());
+    }
 
     @Test
     void shouldCreateSuperAdminWhenAuthenticatedAsRoot() throws Exception {

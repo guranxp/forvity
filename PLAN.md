@@ -69,6 +69,6 @@ System settings are a future feature — out of scope for v1.
 2. System admin management:
    - `POST /api/v1/system/roles` ✅ done
    - `DELETE /api/v1/system/roles/{id}` ✅ done
-   - `GET /api/v1/system/roles`
+   - `GET /api/v1/system/roles` ✅ done
 3. Manage clubs — `GET /api/v1/clubs`, deactivate/reactivate, mark for deletion — requires adding `deactivatedAt` to Club entity
 4. Manage club admins — extend `POST /api/v1/clubs/{slug}/members` to accept a role, `DELETE /api/v1/clubs/{slug}/members/{id}`, `PATCH /api/v1/clubs/{slug}/members/{id}/role`

@@ -1,3 +1,8 @@
+### List all active system roles (requires ROOT or SUPERADMIN session)
+GET http://localhost:8080/api/v1/system/roles
+
+###
+
 ### Create SUPERADMIN (requires ROOT or SUPERADMIN session)
 POST http://localhost:8080/api/v1/system/roles
 Content-Type: application/json

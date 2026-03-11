@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
@@ -149,6 +150,16 @@ class SystemAccountServiceTest {
         assertThatThrownBy(() -> systemAccountService.revokeSystemRole(UUID.randomUUID(), accountId))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("Cannot revoke the last SUPERADMIN");
+    }
+
+    @Test
+    void shouldListSystemRoles() {
+        final var role = mock(SystemRole.class);
+        when(systemRoleRepository.findAllByDeletedAtIsNull()).thenReturn(List.of(role));
+
+        final var result = systemAccountService.listSystemRoles();
+
+        assertThat(result).containsExactly(role);
     }
 
     @Test
