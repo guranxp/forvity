@@ -37,6 +37,7 @@ class SystemAccountServiceTest {
         when(systemAccountRepository.existsByEmail("admin@example.com")).thenReturn(false);
         when(passwordEncoder.encode("secret")).thenReturn("hashed");
         when(systemAccountRepository.save(any(SystemAccount.class))).thenAnswer(i -> i.getArgument(0));
+        when(systemRoleRepository.save(any(SystemRole.class))).thenAnswer(i -> i.getArgument(0));
 
         final var account = systemAccountService.createRootAccount("admin@example.com", "secret");
 
@@ -50,6 +51,31 @@ class SystemAccountServiceTest {
         when(systemAccountRepository.existsByEmail("admin@example.com")).thenReturn(true);
 
         assertThatThrownBy(() -> systemAccountService.createRootAccount("admin@example.com", "secret"))
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("Email already in use");
+
+        verify(systemAccountRepository, never()).save(any());
+    }
+
+    @Test
+    void shouldCreateSuperAdminWhenValidInput() {
+        when(systemAccountRepository.existsByEmail("super@example.com")).thenReturn(false);
+        when(passwordEncoder.encode("secret")).thenReturn("hashed");
+        when(systemAccountRepository.save(any(SystemAccount.class))).thenAnswer(i -> i.getArgument(0));
+        when(systemRoleRepository.save(any(SystemRole.class))).thenAnswer(i -> i.getArgument(0));
+
+        final var role = systemAccountService.createSuperAdmin("super@example.com", "secret");
+
+        assertThat(role.getRole()).isEqualTo(SystemRoleType.SUPERADMIN);
+        assertThat(role.getSystemAccount().getEmail()).isEqualTo("super@example.com");
+        verify(systemRoleRepository).save(any(SystemRole.class));
+    }
+
+    @Test
+    void shouldThrowWhenSuperAdminEmailAlreadyInUse() {
+        when(systemAccountRepository.existsByEmail("super@example.com")).thenReturn(true);
+
+        assertThatThrownBy(() -> systemAccountService.createSuperAdmin("super@example.com", "secret"))
             .isInstanceOf(IllegalStateException.class)
             .hasMessage("Email already in use");
 

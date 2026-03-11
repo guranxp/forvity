@@ -65,7 +65,10 @@ System settings are a future feature — out of scope for v1.
 
 ## Next Steps (in order)
 
-1. Commit the staged cleanup (remove old SystemRole/SystemRoleType from member package)
-2. System admin management — `POST /api/v1/system/roles`, `DELETE /api/v1/system/roles/{id}`, `GET /api/v1/system/roles`
+1. ~~Commit the staged cleanup (remove old SystemRole/SystemRoleType from member package)~~ ✅ done
+2. System admin management:
+   - `POST /api/v1/system/roles` ✅ done
+   - `DELETE /api/v1/system/roles/{id}`
+   - `GET /api/v1/system/roles`
 3. Manage clubs — `GET /api/v1/clubs`, deactivate/reactivate, mark for deletion — requires adding `deactivatedAt` to Club entity
 4. Manage club admins — extend `POST /api/v1/clubs/{slug}/members` to accept a role, `DELETE /api/v1/clubs/{slug}/members/{id}`, `PATCH /api/v1/clubs/{slug}/members/{id}/role`

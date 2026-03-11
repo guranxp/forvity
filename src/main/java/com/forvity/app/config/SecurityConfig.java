@@ -22,6 +22,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/login", "/api/v1/clubs/*/login").permitAll()
                 .requestMatchers("/api/v1/clubs/*/members").permitAll()
                 .requestMatchers("/api/v1/clubs").hasRole("SUPERADMIN")
+                .requestMatchers("/api/v1/system/roles").hasRole("SUPERADMIN")
                 .requestMatchers("/actuator/health", "/actuator/prometheus").permitAll()
                 .anyRequest().authenticated()
             )

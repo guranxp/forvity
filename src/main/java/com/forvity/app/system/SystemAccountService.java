@@ -38,6 +38,15 @@ public class SystemAccountService {
 
     public SystemAccount createRootAccount(final String email, final String password) {
         log.info("Creating ROOT system account {}", kv("email", email));
+        return createSystemAccount(email, password, SystemRoleType.ROOT).getSystemAccount();
+    }
+
+    public SystemRole createSuperAdmin(final String email, final String password) {
+        log.info("Creating SUPERADMIN system account {}", kv("email", email));
+        return createSystemAccount(email, password, SystemRoleType.SUPERADMIN);
+    }
+
+    private SystemRole createSystemAccount(final String email, final String password, final SystemRoleType roleType) {
         hasText(email, "Email must not be blank");
         hasText(password, "Password must not be blank");
         state(!systemAccountRepository.existsByEmail(email), "Email already in use");
@@ -45,13 +54,13 @@ public class SystemAccountService {
         final var account = new SystemAccount(email, passwordEncoder.encode(password));
         final var saved = systemAccountRepository.save(account);
 
-        final var role = new SystemRole(saved, SystemRoleType.ROOT);
-        systemRoleRepository.save(role);
+        final var role = new SystemRole(saved, roleType);
+        final var savedRole = systemRoleRepository.save(role);
 
-        meterRegistry.counter("system_accounts.created", "role", "ROOT").increment();
-        log.info("ROOT system account created {}", kv("systemAccountId", saved.getId()));
+        meterRegistry.counter("system_accounts.created", "role", roleType.name()).increment();
+        log.info("System account created {}", kv("systemAccountId", saved.getId()), kv("role", roleType));
 
-        return saved;
+        return savedRole;
     }
 
     public Optional<SystemAccountDetails> loadForAuthentication(final String email) {
