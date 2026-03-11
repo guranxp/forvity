@@ -8,6 +8,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -80,5 +84,79 @@ class SystemAccountServiceTest {
             .hasMessage("Email already in use");
 
         verify(systemAccountRepository, never()).save(any());
+    }
+
+    @Test
+    void shouldRevokeSystemRoleWhenValid() {
+        final var accountId = UUID.randomUUID();
+        final var otherAccountId = UUID.randomUUID();
+        final var account = mock(SystemAccount.class);
+        when(account.getId()).thenReturn(otherAccountId);
+
+        final var role = mock(SystemRole.class);
+        when(role.getRole()).thenReturn(SystemRoleType.SUPERADMIN);
+        when(role.getSystemAccount()).thenReturn(account);
+
+        when(systemRoleRepository.findByIdAndDeletedAtIsNull(any())).thenReturn(Optional.of(role));
+        when(systemRoleRepository.countByRoleAndDeletedAtIsNull(SystemRoleType.SUPERADMIN)).thenReturn(2L);
+
+        systemAccountService.revokeSystemRole(UUID.randomUUID(), accountId);
+
+        verify(role).softDelete();
+        verify(systemRoleRepository).save(role);
+    }
+
+    @Test
+    void shouldThrowWhenRevokingRoot() {
+        final var role = mock(SystemRole.class);
+        when(role.getRole()).thenReturn(SystemRoleType.ROOT);
+        when(systemRoleRepository.findByIdAndDeletedAtIsNull(any())).thenReturn(Optional.of(role));
+
+        assertThatThrownBy(() -> systemAccountService.revokeSystemRole(UUID.randomUUID(), UUID.randomUUID()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("ROOT role cannot be revoked");
+    }
+
+    @Test
+    void shouldThrowWhenRevokingSelf() {
+        final var accountId = UUID.randomUUID();
+        final var account = mock(SystemAccount.class);
+        when(account.getId()).thenReturn(accountId);
+
+        final var role = mock(SystemRole.class);
+        when(role.getRole()).thenReturn(SystemRoleType.SUPERADMIN);
+        when(role.getSystemAccount()).thenReturn(account);
+        when(systemRoleRepository.findByIdAndDeletedAtIsNull(any())).thenReturn(Optional.of(role));
+
+        assertThatThrownBy(() -> systemAccountService.revokeSystemRole(UUID.randomUUID(), accountId))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Cannot revoke your own role");
+    }
+
+    @Test
+    void shouldThrowWhenRevokingLastSuperAdmin() {
+        final var accountId = UUID.randomUUID();
+        final var otherAccountId = UUID.randomUUID();
+        final var account = mock(SystemAccount.class);
+        when(account.getId()).thenReturn(otherAccountId);
+
+        final var role = mock(SystemRole.class);
+        when(role.getRole()).thenReturn(SystemRoleType.SUPERADMIN);
+        when(role.getSystemAccount()).thenReturn(account);
+        when(systemRoleRepository.findByIdAndDeletedAtIsNull(any())).thenReturn(Optional.of(role));
+        when(systemRoleRepository.countByRoleAndDeletedAtIsNull(SystemRoleType.SUPERADMIN)).thenReturn(1L);
+
+        assertThatThrownBy(() -> systemAccountService.revokeSystemRole(UUID.randomUUID(), accountId))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Cannot revoke the last SUPERADMIN");
+    }
+
+    @Test
+    void shouldThrowWhenRoleNotFound() {
+        when(systemRoleRepository.findByIdAndDeletedAtIsNull(any())).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> systemAccountService.revokeSystemRole(UUID.randomUUID(), UUID.randomUUID()))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("System role not found");
     }
 }

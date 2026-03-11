@@ -7,11 +7,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import static java.util.stream.Collectors.toSet;
 import static org.springframework.util.Assert.notNull;
 
 public record SystemAccountDetails(
+        UUID systemAccountId,
         String email,
         String password,
         Collection<? extends GrantedAuthority> authorities
@@ -23,7 +25,7 @@ public record SystemAccountDetails(
         final var authorities = roles.stream()
             .flatMap(role -> authoritiesFor(role.getRole()).stream())
             .collect(toSet());
-        return new SystemAccountDetails(account.getEmail(), account.getPassword(), authorities);
+        return new SystemAccountDetails(account.getId(), account.getEmail(), account.getPassword(), authorities);
     }
 
     private static Set<GrantedAuthority> authoritiesFor(final SystemRoleType roleType) {

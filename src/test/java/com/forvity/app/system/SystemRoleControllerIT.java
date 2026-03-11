@@ -1,5 +1,6 @@
 package com.forvity.app.system;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -10,6 +11,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.UUID;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -25,6 +29,9 @@ class SystemRoleControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
     void shouldCreateSuperAdminWhenAuthenticatedAsRoot() throws Exception {
@@ -72,6 +79,61 @@ class SystemRoleControllerIT {
                                 }
                                 """))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldRevokeSuperAdminWhenAuthenticatedAsRoot() throws Exception {
+        final var session = loginAsRoot();
+        createSuperAdmin(session, "super@example.com");
+        final var roleId = createSuperAdmin(session, "super2@example.com");
+
+        mockMvc.perform(delete("/api/v1/system/roles/{id}", roleId)
+                        .session(session))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void shouldReturnNotFoundWhenRevokingNonExistentRole() throws Exception {
+        final var session = loginAsRoot();
+
+        mockMvc.perform(delete("/api/v1/system/roles/{id}", UUID.randomUUID())
+                        .session(session))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldReturnBadRequestWhenRevokingLastSuperAdmin() throws Exception {
+        final var session = loginAsRoot();
+        final var roleId = createSuperAdmin(session, "super@example.com");
+
+        // Log in as the new SUPERADMIN and try to revoke themselves — blocked as last SUPERADMIN
+        // Instead: create two, revoke first, then try to revoke second
+        final var secondRoleId = createSuperAdmin(session, "super2@example.com");
+
+        mockMvc.perform(delete("/api/v1/system/roles/{id}", roleId)
+                        .session(session))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(delete("/api/v1/system/roles/{id}", secondRoleId)
+                        .session(session))
+                .andExpect(status().isBadRequest());
+    }
+
+    private UUID createSuperAdmin(final MockHttpSession session, final String email) throws Exception {
+        final var result = mockMvc.perform(post("/api/v1/system/roles")
+                        .session(session)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "email": "%s",
+                                  "password": "secret123"
+                                }
+                                """.formatted(email)))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        final var response = objectMapper.readTree(result.getResponse().getContentAsString());
+        return UUID.fromString(response.get("id").asText());
     }
 
     private MockHttpSession loginAsRoot() throws Exception {

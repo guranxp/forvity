@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.UUID;
 
 import static net.logstash.logback.argument.StructuredArguments.kv;
 import static org.springframework.util.Assert.hasText;
@@ -61,6 +63,24 @@ public class SystemAccountService {
         log.info("System account created {}", kv("systemAccountId", saved.getId()), kv("role", roleType));
 
         return savedRole;
+    }
+
+    public void revokeSystemRole(final UUID roleId, final UUID currentAccountId) {
+        notNull(roleId, "roleId must not be null");
+        notNull(currentAccountId, "currentAccountId must not be null");
+
+        final var role = systemRoleRepository.findByIdAndDeletedAtIsNull(roleId)
+                .orElseThrow(() -> new NoSuchElementException("System role not found"));
+
+        state(role.getRole() != SystemRoleType.ROOT, "ROOT role cannot be revoked");
+        state(!role.getSystemAccount().getId().equals(currentAccountId), "Cannot revoke your own role");
+        state(systemRoleRepository.countByRoleAndDeletedAtIsNull(SystemRoleType.SUPERADMIN) > 1,
+                "Cannot revoke the last SUPERADMIN");
+
+        role.softDelete();
+        systemRoleRepository.save(role);
+
+        log.info("System role revoked {}", kv("roleId", roleId));
     }
 
     public Optional<SystemAccountDetails> loadForAuthentication(final String email) {
