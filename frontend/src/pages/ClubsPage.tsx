@@ -1,6 +1,6 @@
 import { type FormEvent, useState } from 'react'
-import { useMutation } from '@tanstack/react-query'
-import { createClub, type CreateClubRequest } from '../api/clubs'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { listClubs, createClub, type CreateClubRequest } from '../api/clubs'
 import { Layout } from '../components/Layout'
 import { Card } from '../components/Card'
 import { Button } from '../components/Button'
@@ -8,15 +8,20 @@ import { Input } from '../components/Input'
 import { Plus } from 'lucide-react'
 
 export function ClubsPage() {
+  const queryClient = useQueryClient()
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState<CreateClubRequest>({ name: '', slug: '' })
   const [formError, setFormError] = useState('')
-  const [created, setCreated] = useState<{ name: string; slug: string } | null>(null)
+
+  const { data: clubs = [], isLoading } = useQuery({
+    queryKey: ['clubs'],
+    queryFn: listClubs,
+  })
 
   const createMutation = useMutation({
     mutationFn: createClub,
-    onSuccess: (club) => {
-      setCreated({ name: club.name, slug: club.slug })
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['clubs'] })
       setShowForm(false)
       setForm({ name: '', slug: '' })
       setFormError('')
@@ -29,7 +34,7 @@ export function ClubsPage() {
     setForm({ name, slug })
   }
 
-  async function handleCreate(e: FormEvent) {
+  function handleCreate(e: FormEvent) {
     e.preventDefault()
     setFormError('')
     createMutation.mutate(form)
@@ -44,12 +49,6 @@ export function ClubsPage() {
           Create club
         </Button>
       </div>
-
-      {created && (
-        <div className="mb-6 rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700">
-          Club <strong>{created.name}</strong> created with slug <code className="bg-green-100 px-1 rounded">{created.slug}</code>.
-        </div>
-      )}
 
       {showForm && (
         <Card title="New club" className="mb-6">
@@ -77,9 +76,30 @@ export function ClubsPage() {
       )}
 
       <Card>
-        <p className="text-sm text-gray-500">
-          Club listing will be available once <code className="bg-gray-100 px-1 rounded text-xs">GET /api/v1/clubs</code> is implemented.
-        </p>
+        {isLoading ? (
+          <p className="text-sm text-gray-500">Loading...</p>
+        ) : clubs.length === 0 ? (
+          <p className="text-sm text-gray-500">No clubs yet.</p>
+        ) : (
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-left text-gray-500 border-b border-gray-100">
+                <th className="pb-3 font-medium">Name</th>
+                <th className="pb-3 font-medium">Slug</th>
+                <th className="pb-3 font-medium">Created</th>
+              </tr>
+            </thead>
+            <tbody>
+              {clubs.map(club => (
+                <tr key={club.id} className="border-b border-gray-50 last:border-0">
+                  <td className="py-3 text-gray-900">{club.name}</td>
+                  <td className="py-3 text-gray-500 font-mono text-xs">{club.slug}</td>
+                  <td className="py-3 text-gray-400">{new Date(club.createdAt).toLocaleDateString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </Card>
     </Layout>
   )

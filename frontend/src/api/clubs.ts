@@ -12,6 +12,10 @@ export interface CreateClubRequest {
   slug: string
 }
 
+export function listClubs() {
+  return api.get<ClubResponse[]>('/api/v1/clubs')
+}
+
 export function createClub(data: CreateClubRequest) {
   return api.post<ClubResponse>('/api/v1/clubs', data)
 }

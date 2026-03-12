@@ -3,12 +3,14 @@ package com.forvity.app.club;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+import java.util.List;
 
 import static net.logstash.logback.argument.StructuredArguments.kv;
 import static org.springframework.util.Assert.notNull;
@@ -23,6 +25,13 @@ public class ClubController {
     public ClubController(final ClubService clubService) {
         notNull(clubService, "clubService must not be null");
         this.clubService = clubService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ClubResponse>> list() {
+        log.info("GET /api/v1/clubs");
+        final var clubs = clubService.listActive().stream().map(ClubResponse::from).toList();
+        return ResponseEntity.ok(clubs);
     }
 
     @PostMapping
