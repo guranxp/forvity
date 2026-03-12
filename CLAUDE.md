@@ -5,6 +5,8 @@ Forvity is a web application where members of sports clubs can sign up for weekl
 The application is built to support multiple clubs in the same installation.
 
 ## Tech Stack
+
+### Backend
 - Java 21
 - Spring Boot
 - Spring Security (form-based login with email/password)
@@ -13,6 +15,16 @@ The application is built to support multiple clubs in the same installation.
 - PostgreSQL (production)
 - Maven
 - Docker (for deployment)
+
+### Frontend
+- React + TypeScript
+- Vite (build tool)
+- Tailwind CSS v4
+- TanStack Query (data fetching)
+- React Router (navigation)
+- Located in `frontend/` directory
+- Built by Maven via `frontend-maven-plugin` and served as static files from Spring Boot
+- Dev server: `cd frontend && npm run dev` (proxies `/api` to `localhost:8080`)
 
 ## Architecture
 Layered architecture with a DDD-inspired package structure — packaged by domain, not by layer.

@@ -29,7 +29,7 @@ System settings are a future feature — out of scope for v1.
 - `BootstrapService` — creates ROOT account on startup
 - `SystemLoginController` — `POST /api/v1/login`
 - `ClubController` — `POST /api/v1/clubs` (create club, SUPERADMIN only) ✅ done
-- Staged deletion of old `member/SystemRole` and `member/SystemRoleType` (to be committed)
+- Frontend — React + TypeScript + Vite + Tailwind, served from Spring Boot, pages for login / system admins / clubs ✅ done
 
 ## System Admin Management Rules
 
