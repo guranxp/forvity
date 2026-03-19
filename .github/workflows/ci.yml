@@ -20,6 +20,11 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Install feature-flags library
+        run: |
+          git clone https://github.com/guranxp/feature-flags.git
+          cd feature-flags && mvn install -q
+
       - name: Run unit tests
         run: mvn test
 
